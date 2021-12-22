@@ -8,10 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -19,8 +19,8 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'phone',
-        'code',
+        'email',
+        'password',
     ];
 
     /**
@@ -29,13 +29,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'code',
-        'token',
+        'password',
+        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
 }
