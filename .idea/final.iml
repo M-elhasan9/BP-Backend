@@ -136,6 +136,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/giggsey/libphonenumber-for-php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/propaganistas/laravel-phone" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/iso3166" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/telescope" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
