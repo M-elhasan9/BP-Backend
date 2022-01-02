@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ApiUserLogInRequest;
 use App\Http\Requests\ApiUserSendCodeRequest;
+use App\Http\Requests\ReportsRequest;
+use App\Models\Reports;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HasImage;
+use Illuminate\Support\Facades\Storage;
 
 class UserApiController extends BaseApiController
 {
@@ -85,4 +90,30 @@ class UserApiController extends BaseApiController
     {
         return $this->getLoggedInUser();
     }
+
+    public function getFireRequestFromUser(ReportsRequest $request)
+    {
+        DB::transaction(function () use ($request) {
+
+            $description = $request->input("description");
+            $lat_lang = $request->input("lat_lang");
+            $users_id = $request->input("users_id");
+            $user = User::query()->where('id', $users_id)->get()->first();
+
+            $image = $request->file('image');
+            $destinationPath = "public/images/fires";
+
+
+            $report = new Reports();
+            $report->user_id = $user->id;
+            $report->description = $description;
+            $report->lat_lang = $lat_lang;
+
+            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
+            Storage::putFileAs($destinationPath, $image, $filename);
+            $report->save();
+        });
+
+    }
+
 }
