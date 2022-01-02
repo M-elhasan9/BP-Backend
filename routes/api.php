@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Http\Controllers\API\ReportApiController;
+use App\Http\Controllers\UserApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')
-    ->get('/user',[\App\Http\Controllers\UserApiController::class,'getUser']);
+    ->get('/user',[UserApiController::class,'getUser']);
 
-Route::post('user/sendCode',[\App\Http\Controllers\UserApiController::class,'sendCode']);
-Route::post('user/login',[\App\Http\Controllers\UserApiController::class,'login']);
+Route::post('user/sendCode',[UserApiController::class,'sendCode']);
+Route::post('user/login',[UserApiController::class,'login']);
+
+Route::post('user/getFireRequestFromUser',[UserApiController::class,'getFireRequestFromUser']);
