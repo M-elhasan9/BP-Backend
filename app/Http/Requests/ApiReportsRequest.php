@@ -27,7 +27,7 @@ class ApiReportsRequest extends FormRequest
         return [
              'description' => 'required',
              'lat_lang' => 'required',
-             'image' => 'required',
+             'image' => 'nullable',
         ];
     }
 
