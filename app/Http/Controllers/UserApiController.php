@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApiReportsRequest;
 use App\Http\Requests\ApiUserLogInRequest;
 use App\Http\Requests\ApiUserSendCodeRequest;
 use App\Http\Requests\ReportsRequest;
@@ -91,7 +92,7 @@ class UserApiController extends BaseApiController
         return $this->getLoggedInUser();
     }
 
-    public function addReport(ReportsRequest $request)
+    public function addReport(ApiReportsRequest $request)
     {
         DB::transaction(function () use ($request) {
 
@@ -109,8 +110,8 @@ class UserApiController extends BaseApiController
             $report->description = $description;
             $report->lat_lang = $lat_lang;
 
-            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
-            Storage::putFileAs($destinationPath, $image, $filename);
+//            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
+//            Storage::putFileAs($destinationPath, $image, $filename);
             $report->save();
         });
 
