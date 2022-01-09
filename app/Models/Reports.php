@@ -27,7 +27,7 @@ class Reports extends Model
     protected $fillable=[
         'id',
         'status',
-        'users_id',
+        'user_id',
         'den_degree',
         'lat_lang',
         'image',
