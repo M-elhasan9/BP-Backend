@@ -33,7 +33,7 @@ class CamerasCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Cameras::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/cameras');
-        CRUD::setEntityNameStrings('cameras', 'cameras');
+        CRUD::setEntityNameStrings('camera', 'cameras');
     }
 
     /**

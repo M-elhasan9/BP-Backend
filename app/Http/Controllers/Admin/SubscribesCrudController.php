@@ -19,8 +19,6 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 class SubscribesCrudController extends CrudController
 {
     use ListOperation;
-    use CreateOperation;
-    use UpdateOperation;
     use DeleteOperation;
     use ShowOperation;
 
@@ -33,8 +31,7 @@ class SubscribesCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Subscribes::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/subscribes');
-        CRUD::setEntityNameStrings('subscribes', 'subscribes');
-        $this->crud->denyAccess('create');
+        CRUD::setEntityNameStrings('subscribe', 'subscribes');
 
     }
 
@@ -54,12 +51,6 @@ class SubscribesCrudController extends CrudController
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
         CRUD::addColumn(['name' => 'users.phone', 'type' => 'text', 'label' => "Subscribed User"]);
 
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
     protected function setupShowOperation()
     {
@@ -73,70 +64,6 @@ class SubscribesCrudController extends CrudController
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', 'label' => "Location"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
 
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
 
-
-    /**
-     * Define what happens when the Create operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
-    protected function setupCreateOperation()
-    {
-        CRUD::setValidation(SubscribesRequest::class);
-
-        CRUD::addField([
-            'name'=>'id',
-            'type'=>'text',
-            'label' => "Subscribe ID",
-            'attributes' => [
-                'readonly' => 'readonly',
-            ],
-        ]);
-        CRUD::addField(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
-        CRUD::addField(['name' => 'users_id',
-            'type' => 'select2',
-            'label' => "Subscribed User",
-            'entity'    => 'users', // the method that defines the relationship in your Model
-            'attribute' => 'phone',
-        ]);
-        CRUD::addField([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "address",
-            'marker_icon' => null
-        ]);
-        CRUD::addField(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
-
-
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
-    }
-
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    protected function setupUpdateOperation()
-    {
-        $this->setupCreateOperation();
-    }
 }
