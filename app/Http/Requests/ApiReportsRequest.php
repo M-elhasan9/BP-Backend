@@ -26,7 +26,6 @@ class ApiReportsRequest extends FormRequest
     {
         return [
              'description' => 'required',
-             'users_id' => 'required|exists:users,id', //Todo:
              'lat_lang' => 'required|json',
              'image' => 'required',
         ];

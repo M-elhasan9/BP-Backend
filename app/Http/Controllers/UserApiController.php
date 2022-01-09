@@ -91,14 +91,14 @@ class UserApiController extends BaseApiController
         return $this->getLoggedInUser();
     }
 
-    public function getFireRequestFromUser(ReportsRequest $request)
+    public function addReport(ReportsRequest $request)
     {
         DB::transaction(function () use ($request) {
 
             $description = $request->input("description");
             $lat_lang = $request->input("lat_lang");
-            $users_id = $request->input("users_id");
-            $user = User::query()->where('id', $users_id)->get()->first();
+            $user_id = $request->user()->id;
+            $user = User::query()->where('id', $user_id)->get()->first();
 
             $image = $request->file('image');
             $destinationPath = "public/images/fires";

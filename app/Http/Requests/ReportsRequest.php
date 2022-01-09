@@ -26,12 +26,9 @@ class ReportsRequest extends FormRequest
     public function rules()
     {
         return [
-             'status' => 'required',
-             'users_id' => 'required|exists:users,id',
-             'den_degree' => 'required',
              'lat_lang' => 'required|json',
+             'description' => 'required',
              'image' => 'required',
-             'created_at' => 'required',
         ];
     }
 

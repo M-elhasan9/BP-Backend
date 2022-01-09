@@ -6,10 +6,11 @@ use App\Http\Controllers\HasImage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Reports extends Model
 {
-    use CrudTrait,HasFactory,HasImage;
+    use CrudTrait,HasFactory,HasImage,HasApiTokens;
 
     /*
     |--------------------------------------------------------------------------
