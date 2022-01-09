@@ -110,8 +110,8 @@ class UserApiController extends BaseApiController
             $report->description = $description;
             $report->lat_lang = $lat_lang;
 
-            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
-            Storage::putFileAs($destinationPath, $image, $filename);
+//            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
+//            Storage::putFileAs($destinationPath, $image, $filename);
             $report->save();
         });
 
