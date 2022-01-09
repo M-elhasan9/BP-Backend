@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 2,
             'phone' => "05531777788",
-            'code' => "arbve4",
+            'code' => "112233",
         ]);
     }
 }
