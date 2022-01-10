@@ -55,7 +55,6 @@ class UserApiController extends BaseApiController
 
     private function sendMassage($phone, $code)
     {
-        return true;
         $api_key = config('app.turkeysmskey');
         $title = "8507013986";
         $text = "Uygulamaya giris kodu:" . $code;
