@@ -44,6 +44,7 @@ class ReportsCrudController extends CrudController
     {
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Report ID"]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
+        CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
         CRUD::addColumn(['name' => 'user.phone', 'type' => 'text', 'label' => "Reported User"]);
         $this->crud->enableExportButtons();
 
