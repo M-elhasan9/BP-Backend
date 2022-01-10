@@ -35,6 +35,8 @@ class UserCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
         CRUD::setEntityNameStrings('user', 'users');
         $this->crud->denyAccess('create');
+        $this->crud->enableExportButtons();
+
     }
 
     /**
@@ -48,13 +50,12 @@ class UserCrudController extends CrudController
         CRUD::addColumn(['name' => 'id',
             'type' => 'text',
             'label'=>'User ID']);
-        CRUD::addColumn(['name' => 'name', 'type' => 'text']);
         CRUD::addColumn(['name' => 'phone', 'type' => 'text']);
         CRUD::addColumn([
             'name' => 'is_active',
             'type' => 'boolean',
             'label'=>'Is Active',
-            'option' => [0 => 'Yes', 1 => 'No'],
+            'option' => [1 => 'Yes', 0 => 'No'],
             'wrapper' => [
                 'element' => 'span',
                 'class'   => static function ($crud, $column, $entry) {
@@ -75,7 +76,6 @@ class UserCrudController extends CrudController
         CRUD::addColumn(['name' => 'id',
             'type' => 'text',
             'label'=>'User ID']);
-        CRUD::addColumn(['name' => 'name', 'type' => 'text']);
         CRUD::addColumn(['name' => 'phone', 'type' => 'text']);
         CRUD::addColumn([
             'name' => 'is_active',
@@ -85,7 +85,7 @@ class UserCrudController extends CrudController
             'wrapper' => [
                 'element' => 'span',
                 'class'   => static function ($crud, $column, $entry) {
-                    return 'badge badge-'.($entry->{$column['name']} ? 'default' : 'success');
+                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
                 },
             ],
         ],);
@@ -102,7 +102,6 @@ class UserCrudController extends CrudController
     {
         CRUD::setValidation(UserRequest::class);
 
-        CRUD::addField(['name' => 'name', 'type' => 'text']);
         CRUD::addField(['name' => 'phone', 'type' => 'text']);
         CRUD::addField(['name' => 'is_active', 'type' => 'boolean']);
 

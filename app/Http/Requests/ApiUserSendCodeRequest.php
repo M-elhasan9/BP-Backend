@@ -25,7 +25,7 @@ class ApiUserSendCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => ['required', 'phone:AUTO,mobile' ] ,
+            'phone' => ['required', 'phone:AUTO,TR' ] ,
         ];
     }
 

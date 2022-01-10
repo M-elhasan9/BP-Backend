@@ -34,6 +34,8 @@ class CamerasCrudController extends CrudController
         CRUD::setModel(\App\Models\Cameras::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/cameras');
         CRUD::setEntityNameStrings('camera', 'cameras');
+        $this->crud->enableExportButtons();
+
     }
 
     /**
@@ -94,7 +96,7 @@ class CamerasCrudController extends CrudController
             'map_style' => 'height: 300px; width:auto',
             'default_zoom' => 17,
             'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "address",
+            "attr" => "location",
             'marker_icon' => null
         ]);
 

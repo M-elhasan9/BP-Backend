@@ -26,7 +26,7 @@ class ApiUserLogInRequest extends FormRequest
     {
         return [
              'code' => 'required|size:6',
-            'phone' => ['required', 'phone:AUTO,mobile' ] ,
+            'phone' => ['required', 'phone:AUTO,TR' ] ,
         ];
     }
 

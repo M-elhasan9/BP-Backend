@@ -47,7 +47,7 @@ class Reports extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function users(){
+    public function user(){
         $users =  $this->belongsTo(User::class);
         return $users;
     }

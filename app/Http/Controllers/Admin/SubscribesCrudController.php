@@ -32,6 +32,7 @@ class SubscribesCrudController extends CrudController
         CRUD::setModel(\App\Models\Subscribes::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/subscribes');
         CRUD::setEntityNameStrings('subscribe', 'subscribes');
+        $this->crud->enableExportButtons();
 
     }
 
@@ -49,7 +50,7 @@ class SubscribesCrudController extends CrudController
             'label'=>'Subscribe ID',
         ]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
-        CRUD::addColumn(['name' => 'users.phone', 'type' => 'text', 'label' => "Subscribed User"]);
+        CRUD::addColumn(['name' => 'user.phone', 'type' => 'text', 'label' => "Subscribed User"]);
 
     }
     protected function setupShowOperation()
@@ -60,7 +61,7 @@ class SubscribesCrudController extends CrudController
             'label'=>'Subscribe ID',
         ]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
-        CRUD::addColumn(['name' => 'users.phone', 'type' => 'text', 'label' => "Subscribed User"]);
+        CRUD::addColumn(['name' => 'user.phone', 'type' => 'text', 'label' => "Subscribed User"]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', 'label' => "Location"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
 

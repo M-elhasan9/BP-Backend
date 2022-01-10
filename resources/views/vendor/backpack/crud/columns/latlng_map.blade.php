@@ -10,7 +10,7 @@
             font-weight: bold;font-size: 16px;color: #fff;cursor: pointer"><i class="fa fa-close fa-2x"></i></div>
                     <div class="backdrop" style="background-color: rgba(0,0,0,0.26);position:fixed;top: 0;bottom: 0;right: 0;left: 0;z-index: 5000000;display: none"></div>
             <div class="w-100 text-center p-1">
-               <button id="showMap" class="btn btn-secondary btn-light mx-auto"> ملء الشاشة</button>
+               <button id="showMap" class="btn btn-secondary btn-light mx-auto">Full Screen</button>
             </div>
 
 </span>

@@ -35,6 +35,9 @@ class FiresCrudController extends CrudController
         CRUD::setModel(\App\Models\Reports::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/fires');
         CRUD::setEntityNameStrings('fire', 'fires');
+        $this->crud->enableExportButtons();
+
+
     }
 
     /**

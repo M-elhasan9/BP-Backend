@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('phone')->nullable(false)->unique();
             $table->string('code')->nullable(true);
+            $table->boolean('is_active')->default(1);
             $table->string("token")->nullable(true);
             $table->timestamps();
         });

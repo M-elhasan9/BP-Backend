@@ -15,7 +15,7 @@ class ReportsFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=>User::query()->first()->id,
+            'user_id'=>$this->faker->numberBetween(2,10),
             'status'=>$this->faker->randomElement(['New','Confirmed','End']),
             'description'=>$this->faker->text(20),
             'den_degree'=>$this->faker->randomElement(['High','Normal','Low']),
