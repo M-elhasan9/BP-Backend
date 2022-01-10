@@ -70,6 +70,7 @@ class UserApiController extends BaseApiController
         ];
         $uri = 'https://www.turkeysms.com.tr/api/v3/gonder/add-content';
         $rep = $client->request('POST', $uri, $params)->getBody()->getContents();
+
         $reponse = $this->print_r_reverse($rep);
 
         if ($reponse["result"] == true) {
@@ -84,7 +85,7 @@ class UserApiController extends BaseApiController
         $output = preg_replace('/=> (?!Array)(.*)$/m', "=> '$1',", $output);
         $output = preg_replace('/^\s+\)$/m', "),\n", $output);
         $output = rtrim($output, "\n,");
-        return eval("return $output");
+        return eval("return $output;");
     }
 
     public function getUser()
