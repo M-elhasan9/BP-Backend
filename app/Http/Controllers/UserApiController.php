@@ -57,7 +57,7 @@ class UserApiController extends BaseApiController
     {
 
         $api_key = config('app.turkeysmskey');
-        $title = "Onaylama Sifresi";
+        $title = "8507013986";
         $text = "Uygulamaya giris kodu:" . $code;
         $sentto = $phone;
 
