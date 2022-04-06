@@ -117,4 +117,24 @@ class UserApiController extends BaseApiController
 
     }
 
+    public function addSubscribe(ApiReportsRequest $request)
+    {
+        DB::transaction(function () use ($request) {
+
+            $description = $request->input("description");
+            $lat_lang = $request->input("lat_lang");
+            $user_id = $request->user()->id;
+            $user = User::query()->where('id', $user_id)->get()->first();
+
+            $report = new Reports();
+            $report->user_id = $user->id;
+            $report->description = $description;
+            $report->lat_lang = $lat_lang;
+
+            $report->save();
+        });
+
+    }
+
+
 }
