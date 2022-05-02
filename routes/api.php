@@ -24,3 +24,4 @@ Route::post('user/login',[UserApiController::class,'login']);
 
 Route::middleware('auth:sanctum')->post('user/report',[UserApiController::class,'addReport']);
 Route::middleware('auth:sanctum')->post('user/addSubscribe',[UserApiController::class,'addSubscribe']);
+Route::middleware('auth:sanctum')->post('user/getSubscribes',[UserApiController::class,'getSubscribes']);
