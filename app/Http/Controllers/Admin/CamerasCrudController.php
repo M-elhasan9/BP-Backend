@@ -46,14 +46,33 @@ class CamerasCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
+        $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
+
         CRUD::addColumn(['name' => 'id', 'type' => 'number', "label" => "Camera ID",]);
+
+//        $this->crud->addColumn([
+//            // Select
+//            'label'     => 'URL',
+//            'type'      => 'text',
+//            'name'      => 'url', // the db column for the foreign key
+//            'wrapper'   => [
+//                'href' => function ($crud, $column, $entry, $related_key) {
+//                    return 'google.com';
+//                },
+//            ],
+//        ]);
+
+        CRUD::addColumn(['name' => 'description', 'type' => 'text', "label" => "Description",]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location",]);
+
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
+
 
     /**
      * Define what happens when the Create operation is loaded.
@@ -64,7 +83,11 @@ class CamerasCrudController extends CrudController
 
     protected function setupShowOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
+        $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
+
         CRUD::addColumn(['name' => 'id', 'type' => 'text', "label" => "Camera ID",]);
+        CRUD::addColumn(['name' => 'description', 'type' => 'text', "label" => "Description",]);
         CRUD::addColumn([
             'name' => 'lat_lang',
             'label' => "Location",
@@ -88,6 +111,11 @@ class CamerasCrudController extends CrudController
                 'readonly' => 'readonly',
             ],
         ]);
+        CRUD::addField(['name' => 'description', 'type' => 'text', "label" => "Description",]);
+        CRUD::addField(['name' => 'url','type' => 'text',"label" => "Stream URL",]);
+        CRUD::addField(['name' => 'nn_url','type' => 'text',"label" => "Neural Network URL",]);
+
+
         CRUD::addField([
             'name' => 'lat_lang',
             'label' => "Location",

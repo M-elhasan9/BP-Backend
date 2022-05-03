@@ -16,6 +16,9 @@ class CreateCamerasTable extends Migration
         Schema::create('cameras', function (Blueprint $table) {
             $table->id();
             $table->json('lat_lang')->nullable(false);
+            $table->string('description')->nullable(true);
+            $table->string('url')->nullable(true);
+            $table->string('nn_url')->nullable(true);
             $table->timestamps();
         });
     }

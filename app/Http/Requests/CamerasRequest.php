@@ -26,6 +26,8 @@ class CamerasRequest extends FormRequest
     {
         return [
              'lat_lang' => 'required|json',
+             'description' => 'nullable',
+             'url' => 'nullable',
         ];
     }
 
