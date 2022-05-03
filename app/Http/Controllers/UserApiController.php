@@ -6,7 +6,9 @@ use App\Http\Requests\ApiReportsRequest;
 use App\Http\Requests\ApiUserLogInRequest;
 use App\Http\Requests\ApiUserSendCodeRequest;
 use App\Http\Requests\ReportsRequest;
+use App\Http\Requests\SubscribesRequest;
 use App\Models\Reports;
+use App\Models\Subscribes;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -117,7 +119,7 @@ class UserApiController extends BaseApiController
 
     }
 
-    public function addSubscribe(ApiReportsRequest $request)
+    public function addSubscribe(SubscribesRequest $request)
     {
         DB::transaction(function () use ($request) {
 
@@ -135,6 +137,22 @@ class UserApiController extends BaseApiController
         });
 
     }
+
+    public function deleteSubscribe(SubscribesRequest $request){
+        $subscribe = Subscribes::query()->where('user_id',$request->user()->id)
+            ->where('subscribe_id',$request->input('subscribe_id'))->first();
+
+        $subscribe->delete();
+    }
+
+    public function listSubscribes(SubscribesRequest $request){
+
+        $subscribes = Subscribes::query()->where('user_id',$request->user()->id)->get();
+
+        return $subscribes;
+    }
+
+    //TODO:: get fire map
 
 
 }

@@ -25,3 +25,5 @@ Route::post('user/login',[UserApiController::class,'login']);
 Route::middleware('auth:sanctum')->post('user/report',[UserApiController::class,'addReport']);
 Route::middleware('auth:sanctum')->post('user/addSubscribe',[UserApiController::class,'addSubscribe']);
 Route::middleware('auth:sanctum')->post('user/getSubscribes',[UserApiController::class,'getSubscribes']);
+Route::middleware('auth:sanctum')->delete('user/deleteSubscribe',[UserApiController::class,'deleteSubscribe']);
+Route::middleware('auth:sanctum')->get('user/listSubscribes',[UserApiController::class,'listSubscribes']);

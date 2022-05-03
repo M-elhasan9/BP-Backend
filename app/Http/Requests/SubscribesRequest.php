@@ -26,8 +26,8 @@ class SubscribesRequest extends FormRequest
     {
         return [
             'users_id' => 'required|exists:users,id',
+            'description'=>'nullable',
             'lat_lang' => 'required|json',
-            'created_at' => 'required',
         ];
     }
 
