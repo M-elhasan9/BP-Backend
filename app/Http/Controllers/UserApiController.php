@@ -128,12 +128,12 @@ class UserApiController extends BaseApiController
             $user_id = $request->user()->id;
             $user = User::query()->where('id', $user_id)->get()->first();
 
-            $report = new Reports();
-            $report->user_id = $user->id;
-            $report->description = $description;
-            $report->lat_lang = $lat_lang;
+            $subscribe = new Subscribes();
+            $subscribe->user_id = $user->id;
+            $subscribe->description = $description;
+            $subscribe->lat_lang = $lat_lang;
 
-            $report->save();
+            $subscribe->save();
         });
 
     }
