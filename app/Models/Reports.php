@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Reports extends Model
 {
-    use CrudTrait,HasFactory,HasImage,HasApiTokens;
+    use CrudTrait,HasFactory, HasApiTokens;
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class Reports extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $casts =[
-        'lat_lang'=>"object",
+        'lat_lang'=>"json",
     ];
     protected $fillable=[
         'id',
@@ -69,7 +69,5 @@ class Reports extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
-    public function setImageAttribute($value){
-        $this->setAnImageFiled($value, 'image');
-    }
+
 }

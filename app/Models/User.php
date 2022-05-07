@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'phone',
         'is_active',
         'code',
+        'fcm_token',
     ];
 
     /**
@@ -39,4 +41,12 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
+
+
+
 }

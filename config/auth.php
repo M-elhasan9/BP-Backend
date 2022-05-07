@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+
+        ],
+
     ],
 
     /*
@@ -107,5 +113,8 @@ return [
     */
 
     'password_timeout' => 10800,
+
+
+
 
 ];

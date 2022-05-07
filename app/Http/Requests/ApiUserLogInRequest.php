@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class ApiUserLogInRequest extends FormRequest
 {
@@ -25,8 +27,8 @@ class ApiUserLogInRequest extends FormRequest
     public function rules()
     {
         return [
-             'code' => 'required|size:6',
-            'phone' => ['required', 'phone:AUTO,TR' ] ,
+            'code' => 'required|size:6',
+            'phone' => ['required', 'phone:AUTO,TR'],
         ];
     }
 

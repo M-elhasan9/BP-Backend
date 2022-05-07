@@ -20,13 +20,16 @@ class Subscribes extends Model
     protected $table = 'subscribes';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
+
     protected $casts =[
-        'lat_lang'=>"object",
+        'lat_lang'=>"json",
     ];
+
     protected $fillable=[
         'id',
         'user_id',
         'lat_lang',
+
         'created_at',
     ];
     // protected $fillable = [];

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ApiReportsRequest extends FormRequest
 {
@@ -26,7 +27,8 @@ class ApiReportsRequest extends FormRequest
     {
         return [
              'description' => 'required',
-             'lat_lang' => 'required',
+             'lat' => 'required',
+             'lang' => 'required',
              'image' => 'nullable',
         ];
     }

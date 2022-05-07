@@ -14,7 +14,7 @@ class SubscribesRequest extends FormRequest
     public function authorize()
     {
         // only allow updates if the user is logged in
-        return backpack_auth()->check();
+        return true;
     }
 
     /**
@@ -25,9 +25,9 @@ class SubscribesRequest extends FormRequest
     public function rules()
     {
         return [
-            'users_id' => 'required|exists:users,id',
-            'description'=>'nullable',
-            'lat_lang' => 'required|json',
+             'description'=>'nullable',
+             'lat' => 'required',
+             'lang' => 'required',
         ];
     }
 

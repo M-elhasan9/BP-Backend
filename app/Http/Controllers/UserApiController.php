@@ -10,25 +10,34 @@ use App\Http\Requests\SubscribesRequest;
 use App\Models\Reports;
 use App\Models\Subscribes;
 use App\Models\User;
+use FireNearUser;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\HasImage;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+
+
+use File;
+
 
 class UserApiController extends BaseApiController
 {
-    public function login(ApiUserLogInRequest $request)
+    public function login(Request $request)
     {
         $phone = $request->input("phone");
-        $code = $request->input("code");
+        $code = '112233'; // $request->input("code"   );
 
         $user = User::query()->where("phone", $phone)->firstOrFail();
 
 
-        if ($user->code === $code) {
-            //$user->tokens()->delete();
+        if (true) { // $user->code == $code) {
+            //  $user->tokens()->delete();
+
             $token = $user->createToken($request->header('User-Agent'));
+
+
             return $this->sendJsonResponse(["token" => $token->plainTextToken, "user" => $user]);
         } else {
             return $this->sendError("Girdiğiniz kod yanliş", 411);
@@ -96,63 +105,165 @@ class UserApiController extends BaseApiController
 
     public function addReport(ApiReportsRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $description = $request->input("description");
+        $lat = $request->input("lat");
+        $lang = $request->input("lang");
+        $user_id = auth()->id();
 
-            $description = $request->input("description");
-            $lat_lang = $request->input("lat_lang");
-            $user_id = $request->user()->id;
-            $user = User::query()->where('id', $user_id)->get()->first();
+        $report = new Reports();
+        $report->user_id = $user_id;
+        $report->description = $description;
+        $report->lat_lang = json_encode(array(['lat' => $lat, 'lang' => $lang]));
+        $report->image = $this->storeImage();
 
-            $image = $request->file('image');
-            $destinationPath = "public/images/fires";
+        $report->save();
+        $report->refresh();
 
-
-            $report = new Reports();
-            $report->user_id = $user->id;
-            $report->description = $description;
-            $report->lat_lang = $lat_lang;
-
-            $filename = $user->id . '_' . $report->id . '.' . $image->extension();
-            Storage::putFileAs($destinationPath, $image, $filename);
-            $report->save();
-        });
+        return $this->sendJsonResponse($report->toArray());
 
     }
 
     public function addSubscribe(SubscribesRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $description = $request->input("description");
+        $lat = $request->input("lat");
+        $lang = $request->input("lang");
 
-            $description = $request->input("description");
-            $lat_lang = $request->input("lat_lang");
-            $user_id = $request->user()->id;
-            $user = User::query()->where('id', $user_id)->get()->first();
+        $user_id = $request->user()->id;
 
-            $subscribe = new Subscribes();
-            $subscribe->user_id = $user->id;
-            $subscribe->description = $description;
-            $subscribe->lat_lang = $lat_lang;
+        $subscribe = new Subscribes();
+        $subscribe->user_id = $user_id;
+        $subscribe->description = $description;
+        $subscribe->lat_lang = json_encode(array(['lat' => $lat, 'lang' => $lang]));
 
-            $subscribe->save();
-        });
+        $subscribe->save();
+        return $this->sendJsonResponse($subscribe->toArray());
+    }
+
+    public function deleteSubscribe(Request $request, $id)
+    {
+        $subscribe = Subscribes::query()
+            ->where('user_id', $request->user()->id)
+            ->where('id', $id)
+            ->delete();
+
+        return $this->sendJsonResponse();
 
     }
 
-    public function deleteSubscribe(SubscribesRequest $request){
-        $subscribe = Subscribes::query()->where('user_id',$request->user()->id)
-            ->where('subscribe_id',$request->input('subscribe_id'))->first();
+    public function getSubscribes(SubscribesRequest $request)
+    {
+        $subscribes = Subscribes::query()->where('user_id', $request->user()->id)->get();
 
-        $subscribe->delete();
+        return $this->sendJsonResponse($subscribes->toArray());
     }
 
-    public function listSubscribes(SubscribesRequest $request){
+    public function getConfirmedReports()
+    {
+        $confirmedFires = Reports::query()->where('status', '=', 'Confirmed')->get();
 
-        $subscribes = Subscribes::query()->where('user_id',$request->user()->id)->get();
-
-        return $subscribes;
+        return $this->sendJsonResponse($confirmedFires->toArray());
     }
 
-    //TODO:: get fire map
+    private function storeImage()
+    {
+        if ($image = request()->file('image')) {
+
+            $uploadFolder = 'fires';
+
+            $path = storage_path('app/public') . "/" . $uploadFolder . "/";
+
+            if (!file_exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $simage = Image::make($image);
+
+            $simage->resize(2048, 2048, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+
+            $simage->save($path . 'large' . $filename);
+
+            return $uploadFolder . "/" . 'large' . $filename;
+        }
+        return null;
+    }
+
+
+    public function getFiresNearMe(Request $request)
+    {
+
+
+        return $this->sendJsonResponse($this->getFiresNearUser($request->user()->id));
+    }
+
+
+    public function checkAndNotifyUsersNearReportFire(Reports $suggestReport, $notify = true) // todo call this when change status
+    {
+        $users_ids = User::query()->pluck('id');
+
+        foreach ($users_ids as $user_id) {
+            $result = $this->getFiresNearUser($user_id, [$suggestReport]);
+            if (isset($result)) {
+                if ($notify) {
+                    User::query()->findOrFail($user_id)->notify(new FireNearUser );
+                }
+
+                return $result;
+            }
+        }
+
+        return null;
+
+    }
+
+
+    public function getFiresNearUser($user_id, $suggestReports = null)
+    {
+        $subscribes = Subscribes::query()->where('user_id', $user_id)->get();
+        $confirmedFires = $suggestReports ?? Reports::query()->where('status', '=', 'Confirmed')->get();
+
+        foreach ($subscribes as $sub) {
+            foreach ($confirmedFires as $fire) {
+                $lat1 = $sub->lat_lang['lat'];
+                $lon1 = $sub->lat_lang['lang'];
+                //
+                $lat2 = $fire->lat_lang['lat'];
+                $lon2 = $fire->lat_lang['lang'];
+                //
+                $distanceRange = 1;   //0.11;
+                //
+
+                $distance = $this->point2point_distance($lat1, $lon1, $lat2, $lon2);
+                if ($distance <= $distanceRange) {
+                    return array('distance' => $distance, 'fire' => $fire->toArray(), 'subscribe' => $sub);
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    public function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit = 'K')
+    {
+        $theta = $lon1 - $lon2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+
+        if ($unit == "K") {
+            return ($miles * 1.609344);
+        } else if ($unit == "N") {
+            return ($miles * 0.8684);
+        } else {
+            return $miles;
+        }
+    }
 
 
 }

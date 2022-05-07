@@ -15,10 +15,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('phone')->nullable(false)->unique();
+            $table->string('phone')->nullable(true);
             $table->string('code')->nullable(true);
             $table->boolean('is_active')->default(1);
             $table->string("token")->nullable(true);
+            $table->text("fcm_token")->nullable(true);
             $table->timestamps();
         });
         Schema::create('admins', function (Blueprint $table) {
@@ -37,5 +38,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('admins');
     }
 }

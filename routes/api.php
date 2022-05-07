@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\CameraApiController;
 use App\Http\Controllers\UserApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,13 +18,37 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')
-    ->get('/user',[UserApiController::class,'getUser']);
+    ->get('/user', [UserApiController::class, 'getUser']);
 
-Route::post('user/sendCode',[UserApiController::class,'sendCode']);
-Route::post('user/login',[UserApiController::class,'login']);
+Route::post('/user/sendCode', [UserApiController::class, 'sendCode']);
 
-Route::middleware('auth:sanctum')->post('user/report',[UserApiController::class,'addReport']);
-Route::middleware('auth:sanctum')->post('user/addSubscribe',[UserApiController::class,'addSubscribe']);
-Route::middleware('auth:sanctum')->post('user/getSubscribes',[UserApiController::class,'getSubscribes']);
-Route::middleware('auth:sanctum')->delete('user/deleteSubscribe',[UserApiController::class,'deleteSubscribe']);
-Route::middleware('auth:sanctum')->get('user/listSubscribes',[UserApiController::class,'listSubscribes']);
+
+Route::post('/user/login', [UserApiController::class, 'login']);
+
+//for camera
+//Route::post('camera/addReport',[CameraApiController::class,'addReport']);
+
+
+////
+
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+
+    Route::post('/user/addSubscribe', [UserApiController::class, 'addSubscribe']);
+    Route::post('/user/addReport', [UserApiController::class, 'addReport']);
+
+    Route::delete('user/deleteSubscribe/{id}', [UserApiController::class, 'deleteSubscribe']);
+
+
+    Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);
+    Route::get('user/getConfirmedReports', [UserApiController::class, 'getConfirmedReports']);
+    Route::get('user/getFiresNearMe', [UserApiController::class, 'getFiresNearMe']);
+
+
+});
+
+
+
+
+////
