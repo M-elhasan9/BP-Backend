@@ -35,10 +35,10 @@ Route::post('/user/login', [UserApiController::class, 'login']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
-    Route::post('/user/addSubscribe', [UserApiController::class, 'addUserSubscribe']);
-    Route::post('/user/addReport', [UserApiController::class, 'addUserReport']);
+    Route::post('/user/addUserSubscribe', [UserApiController::class, 'addUserSubscribe']);
+    Route::post('/user/addUserReport', [UserApiController::class, 'addUserReport']);
 
-    Route::delete('user/deleteSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
+    Route::delete('user/deleteUserSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
 
 
     Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);

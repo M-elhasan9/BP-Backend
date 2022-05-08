@@ -25,7 +25,7 @@ class SubscribesRequest extends FormRequest
     public function rules()
     {
         return [
-             'description'=>'nullable',
+             'description'=>'required',
              'lat' => 'required',
              'lang' => 'required',
         ];

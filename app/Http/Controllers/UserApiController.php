@@ -127,6 +127,7 @@ class UserApiController extends BaseApiController
         $report->save();
         $report->refresh();
 
+
         $this->checkAndNotifyUsersNearReportFire($report, true); // todo for test only
 
 
@@ -156,8 +157,7 @@ class UserApiController extends BaseApiController
     public function deleteUserSubscribe(Request $request, $id)
     {
         $subscribe = Subscribe::query()
-            ->where('reporter_id', $request->user()->id)
-            ->where('reporter_type', User::class)
+            ->where('user_id', $request->user()->id)
             ->where('id', $id)
             ->delete();
 
@@ -165,7 +165,7 @@ class UserApiController extends BaseApiController
 
     }
 
-    public function getSubscribes(SubscribesRequest $request)
+    public function getSubscribes( Request $request)
     {
         $subscribes = Subscribe::query()->where('user_id', $request->user()->id)->get();
 
