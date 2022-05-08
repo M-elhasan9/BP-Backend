@@ -13,7 +13,7 @@ class MapController  extends CrudController
     use ShowOperation;
     public function setup()
     {
-        CRUD::setModel(\App\Models\Reports::class);
+        CRUD::setModel(\App\Models\Report::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/map');
         CRUD::setEntityNameStrings('map', 'maps');
         $this->crud->setShowView('map');

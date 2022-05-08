@@ -26,9 +26,8 @@ class ReportsRequest extends FormRequest
     public function rules()
     {
         return [
-             'lat_lang' => 'required|json',
-             'description' => 'required',
-             'image' => 'required',
+             'status' => 'required',
+             'den_degree' => 'required',
         ];
     }
 

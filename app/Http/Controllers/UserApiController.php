@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ApiReportsRequest;
 use App\Http\Requests\ApiUserLogInRequest;
 use App\Http\Requests\ApiUserSendCodeRequest;
-use App\Http\Requests\ReportsRequest;
 use App\Http\Requests\SubscribesRequest;
-use App\Models\Reports;
-use App\Models\Subscribes;
+use App\Models\Report;
+use App\Models\Subscribe;
 use App\Models\User;
-use FireNearUser;
+use App\Ntfs\FireNearUser;
+
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +26,7 @@ class UserApiController extends BaseApiController
 {
     public function login(Request $request)
     {
+        $fcm_token = $request->input("fcm_token");
         $phone = $request->input("phone");
         $code = '112233'; // $request->input("code"   );
 
@@ -36,6 +37,9 @@ class UserApiController extends BaseApiController
             //  $user->tokens()->delete();
 
             $token = $user->createToken($request->header('User-Agent'));
+            $user->fcm_token = $fcm_token;
+            $user->save();
+            $user->refresh();
 
 
             return $this->sendJsonResponse(["token" => $token->plainTextToken, "user" => $user]);
@@ -103,27 +107,34 @@ class UserApiController extends BaseApiController
         return $this->getLoggedInUser();
     }
 
-    public function addReport(ApiReportsRequest $request)
+    public function addUserReport(ApiReportsRequest $request)
     {
         $description = $request->input("description");
         $lat = $request->input("lat");
         $lang = $request->input("lang");
         $user_id = auth()->id();
 
-        $report = new Reports();
-        $report->user_id = $user_id;
+        $report = new Report();
+
+        $report->reporter_id = $user_id;
+        $report->reporter_type = User::class;
+
+
         $report->description = $description;
-        $report->lat_lang = json_encode(array(['lat' => $lat, 'lang' => $lang]));
+        $report->lat_lang = ['lat' => $lat, 'lang' => $lang];
         $report->image = $this->storeImage();
 
         $report->save();
         $report->refresh();
 
+        $this->checkAndNotifyUsersNearReportFire($report, true); // todo for test only
+
+
         return $this->sendJsonResponse($report->toArray());
 
     }
 
-    public function addSubscribe(SubscribesRequest $request)
+    public function addUserSubscribe(SubscribesRequest $request)
     {
         $description = $request->input("description");
         $lat = $request->input("lat");
@@ -131,19 +142,22 @@ class UserApiController extends BaseApiController
 
         $user_id = $request->user()->id;
 
-        $subscribe = new Subscribes();
+        $subscribe = new Subscribe();
         $subscribe->user_id = $user_id;
         $subscribe->description = $description;
-        $subscribe->lat_lang = json_encode(array(['lat' => $lat, 'lang' => $lang]));
+        $subscribe->lat_lang = ['lat' => $lat, 'lang' => $lang];
 
         $subscribe->save();
+
+
         return $this->sendJsonResponse($subscribe->toArray());
     }
 
-    public function deleteSubscribe(Request $request, $id)
+    public function deleteUserSubscribe(Request $request, $id)
     {
-        $subscribe = Subscribes::query()
-            ->where('user_id', $request->user()->id)
+        $subscribe = Subscribe::query()
+            ->where('reporter_id', $request->user()->id)
+            ->where('reporter_type', User::class)
             ->where('id', $id)
             ->delete();
 
@@ -153,14 +167,14 @@ class UserApiController extends BaseApiController
 
     public function getSubscribes(SubscribesRequest $request)
     {
-        $subscribes = Subscribes::query()->where('user_id', $request->user()->id)->get();
+        $subscribes = Subscribe::query()->where('user_id', $request->user()->id)->get();
 
         return $this->sendJsonResponse($subscribes->toArray());
     }
 
     public function getConfirmedReports()
     {
-        $confirmedFires = Reports::query()->where('status', '=', 'Confirmed')->get();
+        $confirmedFires = Report::query()->where('status', '=', 'Confirmed')->get();
 
         return $this->sendJsonResponse($confirmedFires->toArray());
     }
@@ -194,13 +208,11 @@ class UserApiController extends BaseApiController
 
     public function getFiresNearMe(Request $request)
     {
-
-
         return $this->sendJsonResponse($this->getFiresNearUser($request->user()->id));
     }
 
 
-    public function checkAndNotifyUsersNearReportFire(Reports $suggestReport, $notify = true) // todo call this when change status
+    public function checkAndNotifyUsersNearReportFire(Report $suggestReport, $notify = true) // todo call this when change status
     {
         $users_ids = User::query()->pluck('id');
 
@@ -208,7 +220,7 @@ class UserApiController extends BaseApiController
             $result = $this->getFiresNearUser($user_id, [$suggestReport]);
             if (isset($result)) {
                 if ($notify) {
-                    User::query()->findOrFail($user_id)->notify(new FireNearUser );
+                    User::query()->findOrFail($user_id)->notify(new FireNearUser);
                 }
 
                 return $result;
@@ -222,8 +234,8 @@ class UserApiController extends BaseApiController
 
     public function getFiresNearUser($user_id, $suggestReports = null)
     {
-        $subscribes = Subscribes::query()->where('user_id', $user_id)->get();
-        $confirmedFires = $suggestReports ?? Reports::query()->where('status', '=', 'Confirmed')->get();
+        $subscribes = Subscribe::query()->where('user_id', $user_id)->get();
+        $confirmedFires = $suggestReports ?? Report::query()->where('status', '=', 'Confirmed')->get();
 
         foreach ($subscribes as $sub) {
             foreach ($confirmedFires as $fire) {
@@ -233,7 +245,7 @@ class UserApiController extends BaseApiController
                 $lat2 = $fire->lat_lang['lat'];
                 $lon2 = $fire->lat_lang['lang'];
                 //
-                $distanceRange = 1;   //0.11;
+                $distanceRange = 1000;   //0.11;
                 //
 
                 $distance = $this->point2point_distance($lat1, $lon1, $lat2, $lon2);

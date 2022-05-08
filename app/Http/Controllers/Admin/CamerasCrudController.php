@@ -31,7 +31,7 @@ class CamerasCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Cameras::class);
+        CRUD::setModel(\App\Models\Camera::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/cameras');
         CRUD::setEntityNameStrings('camera', 'cameras');
         $this->crud->enableExportButtons();

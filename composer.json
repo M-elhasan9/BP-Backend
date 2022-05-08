@@ -17,7 +17,6 @@
         "laravel/telescope": "^4.6",
         "laravel/tinker": "^2.5",
         "netojose/laravel-api-explorer": "^2.0",
-        "nwidart/laravel-modules": "^8.2",
         "propaganistas/laravel-phone": "^4.2"
     },
     "require-dev": {

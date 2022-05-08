@@ -17,11 +17,10 @@ class CreateReportsTable extends Migration
             $table->id();
             $table->string('status')->nullable(true);
             $table->string('description')->nullable(false);
-            $table->unsignedBigInteger('user_id');
+            $table->morphs('reporter');
             $table->string('den_degree')->nullable(true);
             $table->json('lat_lang')->nullable(false);
             $table->string('image')->nullable(true);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

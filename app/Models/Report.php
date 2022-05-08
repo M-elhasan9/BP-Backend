@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
-class Reports extends Model
+class Report extends Model
 {
-    use CrudTrait,HasFactory, HasApiTokens;
+    use CrudTrait, HasFactory, HasApiTokens;
 
     /*
     |--------------------------------------------------------------------------
@@ -21,17 +21,18 @@ class Reports extends Model
     protected $table = 'reports';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    protected $casts =[
-        'lat_lang'=>"json",
+    protected $casts = [
+        'lat_lang' => "json",
     ];
-    protected $fillable=[
+    protected $fillable = [
         'id',
         'status',
-        'user_id',
         'den_degree',
         'lat_lang',
         'image',
         'created_at',
+        'reporter_id',
+        'reporter_type',
     ];
     // protected $hidden = [];
     // protected $dates = [];
@@ -47,9 +48,9 @@ class Reports extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function user(){
-        $users =  $this->belongsTo(User::class);
-        return $users;
+    public function reporter()
+    {
+        return $this->morphTo();
     }
 
     /*

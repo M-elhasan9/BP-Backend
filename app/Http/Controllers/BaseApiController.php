@@ -44,7 +44,7 @@ abstract class BaseApiController extends Controller
     {
         $response = [
             'success' => true,
-            'data' => $result === null ? '' : $result,
+            'data' => $result,
         ];
 
         if ($count != null)

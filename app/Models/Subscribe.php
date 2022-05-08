@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
-class Subscribes extends Model
+class Subscribe extends Model
 {
     use CrudTrait,HasFactory,HasApiTokens;
 

@@ -49,4 +49,11 @@ class User extends Authenticatable
 
 
 
+    public function reporter()
+    {
+        return $this->morphMany(Report::class, 'reporter', 'reporter_type', 'reporter_id');
+    }
+
+
+
 }

@@ -6,7 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cameras extends Model
+class Camera extends Model
 {
     use CrudTrait,HasFactory;
 
@@ -50,6 +50,13 @@ class Cameras extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
+    public function reporter()
+    {
+        return $this->morphMany(Report::class, 'reporter', 'reporter_type', 'reporter_id');
+    }
+
+
 
     /*
     |--------------------------------------------------------------------------

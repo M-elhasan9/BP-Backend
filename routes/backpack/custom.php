@@ -18,7 +18,6 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('user', 'UserCrudController');
     Route::get('map', 'MapController@map');
-    Route::crud('fires', 'FiresCrudController');
     Route::crud('reports', 'ReportsCrudController');
     Route::crud('subscribes', 'SubscribesCrudController');
     Route::crud('cameras', 'CamerasCrudController');

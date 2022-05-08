@@ -1,5 +1,7 @@
-
 <?php
+
+namespace App\Ntfs;
+
 
 
 use Illuminate\Notifications\Notification;
@@ -21,18 +23,11 @@ class FireNearUser extends Notification
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
-            ->setData(['data1' => 'value', 'data2' => 'value2'])
+            //    ->setData(['data1' => 'value', 'data2' => 'value2'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
-                ->setTitle('Account Activated')
-                ->setBody('Your account has been activated.')
-                ->setImage('http://example.com/url-to-image-here.png'))
-            ->setAndroid(
-                AndroidConfig::create()
-                    ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
-                    ->setNotification(AndroidNotification::create()->setColor('#0A0A0A'))
-            )->setApns(
-                ApnsConfig::create()
-                    ->setFcmOptions(ApnsFcmOptions::create()->setAnalyticsLabel('analytics_ios')));
+                ->setTitle('تنبيه حريق')
+                ->setBody('حريق قريب من احدى مواقعك المحفوظة'));
+
     }
 
     // optional method when using kreait/laravel-firebase:^3.0, this method can be omitted, defaults to the default project

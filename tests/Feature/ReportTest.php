@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Reports;
+use App\Models\Report;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\TestCase;

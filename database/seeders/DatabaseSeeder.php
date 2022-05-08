@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Cameras;
-use App\Models\Reports;
-use App\Models\Subscribes;
+use App\Models\Camera;
+use App\Models\Report;
+use App\Models\Subscribe;
 use App\Models\User;
-use Database\Factories\CamerasFactory;
+use Database\Factories\CameraFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(UserSeeder::class);
-        Cameras::factory(10)->create();
-        Reports::factory(10)->create();
-        Subscribes::factory(10)->create();
+        Camera::factory(10)->create();
+        Report::factory(10)->create();
+        Subscribe::factory(10)->create();
         User::factory(10)->create();
     }
 }
