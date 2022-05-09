@@ -26,7 +26,7 @@ Route::post('/user/sendCode', [UserApiController::class, 'sendCode']);
 Route::post('/user/login', [UserApiController::class, 'login']);
 
 //for camera
-//Route::post('camera/addReport',[CameraApiController::class,'addReport']);
+Route::post('camera/addCameraReport',[CameraApiController::class,'addCameraReport']);
 
 
 ////
@@ -34,17 +34,14 @@ Route::post('/user/login', [UserApiController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-
     Route::post('/user/addUserSubscribe', [UserApiController::class, 'addUserSubscribe']);
     Route::post('/user/addUserReport', [UserApiController::class, 'addUserReport']);
 
     Route::delete('user/deleteUserSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
 
-
     Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);
     Route::get('user/getConfirmedReports', [UserApiController::class, 'getConfirmedReports']);
     Route::get('user/getFiresNearMe', [UserApiController::class, 'getFiresNearMe']);
-
 
 });
 

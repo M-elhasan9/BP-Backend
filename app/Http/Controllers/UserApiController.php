@@ -18,8 +18,10 @@ use App\Http\Controllers\HasImage;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
-
+use Kreait\Firebase\Exception\Messaging\InvalidArgument;
+use Kreait\Firebase\Exception\Messaging\NotFound;
 use File;
+use NotificationChannels\Fcm\Exceptions\CouldNotSendNotification;
 
 
 class UserApiController extends BaseApiController
@@ -28,13 +30,13 @@ class UserApiController extends BaseApiController
     {
         $fcm_token = $request->input("fcm_token");
         $phone = $request->input("phone");
-        $code = '112233'; // $request->input("code"   );
+        $code = $request->input("code");
 
         $user = User::query()->where("phone", $phone)->firstOrFail();
 
 
-        if (true) { // $user->code == $code) {
-            //  $user->tokens()->delete();
+        if ($user->code === $code) {
+            $user->tokens()->delete();
 
             $token = $user->createToken($request->header('User-Agent'));
             $user->fcm_token = $fcm_token;
@@ -44,7 +46,7 @@ class UserApiController extends BaseApiController
 
             return $this->sendJsonResponse(["token" => $token->plainTextToken, "user" => $user]);
         } else {
-            return $this->sendError("Girdiğiniz kod yanliş", 411);
+            return $this->sendError("The code you entered is incorrect", 411);
         }
     }
 
@@ -118,6 +120,7 @@ class UserApiController extends BaseApiController
 
         $report->reporter_id = $user_id;
         $report->reporter_type = User::class;
+        $report->status = "New";
 
 
         $report->description = $description;
@@ -128,7 +131,7 @@ class UserApiController extends BaseApiController
         $report->refresh();
 
 
-        $this->checkAndNotifyUsersNearReportFire($report, true); // todo for test only
+        $this->checkAndNotifyUsersNearReportFire($report, true); // todo: for test only
 
 
         return $this->sendJsonResponse($report->toArray());
@@ -165,7 +168,7 @@ class UserApiController extends BaseApiController
 
     }
 
-    public function getSubscribes( Request $request)
+    public function getSubscribes(Request $request)
     {
         $subscribes = Subscribe::query()->where('user_id', $request->user()->id)->get();
 
@@ -220,7 +223,31 @@ class UserApiController extends BaseApiController
             $result = $this->getFiresNearUser($user_id, [$suggestReport]);
             if (isset($result)) {
                 if ($notify) {
-                    User::query()->findOrFail($user_id)->notify(new FireNearUser);
+
+                    $user = User::query()->findOrFail($user_id);
+
+                    if (isset($user->fcm_token)) {
+                        try {
+                            $user->notify(new FireNearUser('fire_near_user'));
+                        } catch (NotFound $e) {
+                            // $token is not registered to the project (any more)
+                            // Handle the token (e.g. delete it in a local database)
+                            $user->fcm_token = null;
+                            $user->save();
+                        } catch (InvalidArgument $e) {
+                            // $token is not a *valid* registration token, meaning
+                            // the format is invalid, OR the message was invalid
+
+                            $user->fcm_token = null;
+                            $user->save();
+                        } catch (CouldNotSendNotification $e) {
+
+                            $user->fcm_token = null;
+                            $user->save();
+                        }
+                    }
+
+
                 }
 
                 return $result;
@@ -245,7 +272,7 @@ class UserApiController extends BaseApiController
                 $lat2 = $fire->lat_lang['lat'];
                 $lon2 = $fire->lat_lang['lang'];
                 //
-                $distanceRange = 1000;   //0.11;
+                $distanceRange = 10000000;   //0.11;
                 //
 
                 $distance = $this->point2point_distance($lat1, $lon1, $lat2, $lon2);

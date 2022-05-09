@@ -3,7 +3,6 @@
 namespace App\Ntfs;
 
 
-
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
@@ -15,6 +14,16 @@ use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
 class FireNearUser extends Notification
 {
+
+    var $type;
+
+    public function __construct($type)
+    {
+
+        $this->type = $type;
+    }
+
+
     public function via($notifiable)
     {
         return [FcmChannel::class];
@@ -23,10 +32,10 @@ class FireNearUser extends Notification
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
-            //    ->setData(['data1' => 'value', 'data2' => 'value2'])
+            ->setData(['type' => $this->type, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
-                ->setTitle('تنبيه حريق')
-                ->setBody('حريق قريب من احدى مواقعك المحفوظة'));
+                ->setTitle('Fire alarm')
+                ->setBody('A fire near one of your saved places'));
 
     }
 

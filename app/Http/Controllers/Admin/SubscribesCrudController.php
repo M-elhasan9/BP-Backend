@@ -44,22 +44,14 @@ class SubscribesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addColumn([
-            'name'=>'id',
-            'type'=>'text',
-            'label'=>'Subscribe ID',
-        ]);
+        CRUD::addColumn(['name'=>'id','type'=>'text','label'=>'Subscribe ID',]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
         CRUD::addColumn(['name' => 'user.phone', 'type' => 'text', 'label' => "Subscribed User"]);
 
     }
     protected function setupShowOperation()
     {
-        CRUD::addColumn([
-            'name'=>'id',
-            'type'=>'text',
-            'label'=>'Subscribe ID',
-        ]);
+        CRUD::addColumn(['name'=>'id','type'=>'text','label'=>'Subscribe ID',]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Subscribed at"]);
         CRUD::addColumn(['name' => 'user.phone', 'type' => 'text', 'label' => "Subscribed User"]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', 'label' => "Location"]);

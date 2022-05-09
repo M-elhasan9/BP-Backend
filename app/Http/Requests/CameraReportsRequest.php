@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UserRequest extends FormRequest
+class CameraReportsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,8 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => ['required', 'phone:AUTO,TR' ] ,
-
+             'path' => 'required',
+             'stream' => 'required',
         ];
     }
 

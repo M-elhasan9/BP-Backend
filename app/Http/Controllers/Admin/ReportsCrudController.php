@@ -53,6 +53,15 @@ class ReportsCrudController extends CrudController
         CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
+        CRUD::addColumn([
+            'name'     => 'reporter_type',
+            'label'    => 'Reported From',
+            'type'     => 'closure',
+            'function' => function($entry) {
+                return (($entry->reporter_type)=="App\Models\User"?"User":"Camera");
+            }
+        ],);
+        CRUD::addColumn(['name' => 'reporter_id', 'type' => 'text', "label" => "Reporter ID"]);
 
     }
 
@@ -64,6 +73,15 @@ class ReportsCrudController extends CrudController
         CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
+        CRUD::addColumn(['name' => 'reporter_id', 'type' => 'text', "label" => "Reporter ID"]);
+        CRUD::addColumn([
+            'name'     => 'reporter_type',
+            'label'    => 'Reported From',
+            'type'     => 'closure',
+            'function' => function($entry) {
+                return (($entry->reporter_type)=="App\Models\User"?"User":"Camera");
+            }
+        ],);
 
         CRUD::addColumn([
             "name" => "image",

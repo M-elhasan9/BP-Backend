@@ -16,10 +16,11 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->string('status')->nullable(true);
-            $table->string('description')->nullable(false);
+            $table->string('description')->nullable(true);
+            $table->string('path')->nullable(true);
             $table->morphs('reporter');
             $table->string('den_degree')->nullable(true);
-            $table->json('lat_lang')->nullable(false);
+            $table->json('lat_lang')->nullable(true);
             $table->string('image')->nullable(true);
             $table->timestamps();
         });
