@@ -16,6 +16,8 @@ class CameraApiController extends BaseApiController
         $stream = $request->input("stream");
         $description = $request->input("description");
         $path = $request->input("path");
+        $degree = $request->input("degree");
+        $count = $request->input("count");
 
         $report = new Report();
 
@@ -23,6 +25,9 @@ class CameraApiController extends BaseApiController
         $report->reporter_type = Camera::class;
 
         $report->image = $path;
+        $report->den_degree = $degree;
+        $report->count = $count;
+        $report->nn_approval = true;
         $report->description = $description;
         $report->lat_lang = Camera::query()->where('id','=',$stream)->first()->lat_lang;
 
