@@ -46,6 +46,7 @@ class CamerasCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
         $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'number', "label" => "Camera ID",]);
@@ -82,6 +83,7 @@ class CamerasCrudController extends CrudController
 
     protected function setupShowOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
         $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', "label" => "Camera ID",]);
