@@ -21,7 +21,7 @@
             <script>
                 function initMap() {
                     // The location of Uluru
-                    var uluru = {lat: <?php echo $entry->location->latlng->lat ;?>, lng: <?php echo $entry->location->latlng->lng ;?>};
+                    var uluru = {lat: <?php echo $entry->lat_lang->lat ;?>, lng: <?php echo $entry->lat_lang->lng ;?>};
                     // The map, centered at Uluru
                     var map = new google.maps.Map(
                         document.getElementById('map'), {zoom: 15, center: uluru});

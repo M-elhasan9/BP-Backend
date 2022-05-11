@@ -1,13 +1,14 @@
 @php
     $oldValue = null;
     $attr= $field['attr'];
+
     if (isset($entry) && $entry[$attr]!=null){
-         $lat = $entry[$attr]->latlng->lat ;
-     $lng =  $entry[$attr]->latlng->lng ;
+         $lat = $entry[$attr]->lat ;
+     $lng =  $entry[$attr]->lng ;
     }
-    else if (old($attr) &&  old($attr)!=null && isset(json_decode(old($attr))->latlng)){
-         $lat = json_decode(old($attr))->latlng->lat ;
-        $lng =  json_decode(old($attr))->latlng->lng ;
+    else if (old($attr) &&  old($attr)!=null){
+         $lat = json_decode(old($attr))->lat;
+        $lng =  json_decode(old($attr))->lng;
     }
     else
         {
@@ -202,12 +203,8 @@
                                     var fixedLatLng = document.getElementById('latlong').value.split(",");
                                     fixedLatLng = {lat: fixedLatLng[0], lng: fixedLatLng[1]}
                                     var value = document.getElementById('search_address').value = results[0].formatted_address;
-                                    var data = {"value": value, "latlng": fixedLatLng};
+                                    var data =fixedLatLng;
 
-                                    for (var i = 0; i < results[0].address_components.length; i++) {
-                                        var addressType = results[0].address_components[i].types[0];
-                                        data[addressType] = results[0].address_components[i]['long_name'];
-                                    }
                                     document.getElementById('latlong').value = JSON.stringify(data)
                                 } else {
                                     document.getElementById('search_address').value = '';

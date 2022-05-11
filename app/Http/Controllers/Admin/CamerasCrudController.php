@@ -83,7 +83,7 @@ class CamerasCrudController extends CrudController
             'map_style' => 'height: 300px; width:auto',
             'default_zoom' => 17,
             'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "address",
+            "attr" => "lat_lang",
             'marker_icon' => null
         ]);
     }
@@ -105,7 +105,7 @@ class CamerasCrudController extends CrudController
             'map_style' => 'height: 300px; width:auto',
             'default_zoom' => 17,
             'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "location",
+            "attr" => "lat_lang",
             'marker_icon' => null
         ]);
 
