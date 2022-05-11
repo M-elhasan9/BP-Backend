@@ -52,6 +52,14 @@ class ReportsCrudController extends CrudController
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
         CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
+        CRUD::addColumn([
+            "name" => "image",
+            "type" => "image",
+            'label' => "Image",
+            'upload' => true,
+            'crop' => true,
+            'prefix' => "/storage/"
+        ]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
         CRUD::addColumn([
             'name'     => 'reporter_type',

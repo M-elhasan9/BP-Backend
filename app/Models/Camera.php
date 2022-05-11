@@ -20,7 +20,7 @@ class Camera extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $casts =[
-        'lat_lang'=>"object",
+        'Location'=>"object",
     ];
      protected $guarded = [
          'id',

@@ -107,6 +107,7 @@ class CamerasCrudController extends CrudController
 
         CRUD::addField(['name' => 'description', 'type' => 'text', "label" => "Description",]);
         CRUD::addField(['name' => 'url','type' => 'text',"label" => "Stream URL",]);
+        CRUD::addField(['name' => 'nn_url','type' => 'text',"label" => "Neural Network URL",]);
 
 
         CRUD::addField([
