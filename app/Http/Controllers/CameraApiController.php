@@ -24,7 +24,7 @@ class CameraApiController extends BaseApiController
 
         $report->image = $path;
         $report->description = $description;
-        $report->lat_lang = (Camera::query()->find($stream)->first)->lat_lang;
+        $report->lat_lang = Camera::query()->where('id','=',$stream)->first()->lat_lang;
 
         $report->save();
         $report->refresh();
