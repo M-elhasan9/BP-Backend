@@ -16,35 +16,37 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')
-    ->get('/user', [UserApiController::class, 'getUser']);
-
-Route::post('/user/sendCode', [UserApiController::class, 'sendCode']);
+Route::group(['middleware' => [\App\Http\Middleware\AlwaysReturnJSON::class]], function () {
 
 
-Route::post('/user/login', [UserApiController::class, 'login']);
+    Route::middleware('auth:sanctum')
+        ->get('/user', [UserApiController::class, 'getUser']);
+
+    Route::post('/user/sendCode', [UserApiController::class, 'sendCode']);
+
+
+    Route::post('/user/login', [UserApiController::class, 'login']);
 
 //for camera
-Route::post('camera/addCameraReport',[CameraApiController::class,'addCameraReport']);
+    Route::post('camera/addCameraReport', [CameraApiController::class, 'addCameraReport']);
 
 
 ////
 
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    Route::post('/user/addUserSubscribe', [UserApiController::class, 'addUserSubscribe']);
-    Route::post('/user/addUserReport', [UserApiController::class, 'addUserReport']);
+        Route::post('/user/addUserSubscribe', [UserApiController::class, 'addUserSubscribe']);
+        Route::post('/user/addUserReport', [UserApiController::class, 'addUserReport']);
 
-    Route::delete('user/deleteUserSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
+        Route::delete('user/deleteUserSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
 
-    Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);
-    Route::get('user/getConfirmedReports', [UserApiController::class, 'getConfirmedReports']);
-    Route::get('user/getFiresNearMe', [UserApiController::class, 'getFiresNearMe']);
+        Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);
+        Route::get('user/getConfirmedReports', [UserApiController::class, 'getConfirmedReports']);
+        Route::get('user/getFiresNearMe', [UserApiController::class, 'getFiresNearMe']);
 
+    });
 });
-
 
 
 
