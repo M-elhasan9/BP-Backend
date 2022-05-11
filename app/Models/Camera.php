@@ -35,7 +35,7 @@ class Camera extends Model
     }
     public function openNN($crud = false)
     {
-        return '<a class="btn btn-sm btn-link" target="_blank" href="https://nn.yesilkalacak.com/stream/'.$this->id.'?path='.$this->url.'" data-toggle="tooltip" title="stream custom button."><i class="las la-network-wired"></i> Open Neural Network</a>';
+        return '<a class="btn btn-sm btn-link" target="_blank" href="http://nn.yesilkalacak.com/stream/'.$this->id.'?path='.$this->url.'" data-toggle="tooltip" title="stream custom button."><i class="las la-network-wired"></i> Open Neural Network</a>';
     }
 
 
