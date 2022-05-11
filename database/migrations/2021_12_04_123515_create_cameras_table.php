@@ -18,7 +18,6 @@ class CreateCamerasTable extends Migration
             $table->json('lat_lang')->nullable(true);
             $table->string('description')->nullable(true);
             $table->string('url')->nullable(true);
-            $table->string('nn_url')->nullable(true);
             $table->timestamps();
         });
     }

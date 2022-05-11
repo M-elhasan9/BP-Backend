@@ -272,7 +272,7 @@ class UserApiController extends BaseApiController
                 $lat2 = $fire->lat_lang['lat'];
                 $lon2 = $fire->lat_lang['lang'];
                 //
-                $distanceRange = 10000000;   //0.11;
+                $distanceRange = 10;   //0.11;
                 //
 
                 $distance = $this->point2point_distance($lat1, $lon1, $lat2, $lon2);

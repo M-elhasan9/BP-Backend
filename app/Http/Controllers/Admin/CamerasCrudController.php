@@ -46,7 +46,6 @@ class CamerasCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
         $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'number', "label" => "Camera ID",]);
@@ -83,7 +82,6 @@ class CamerasCrudController extends CrudController
 
     protected function setupShowOperation()
     {
-        $this->crud->addButtonFromModelFunction("line", "Open NN", "openNN","beginning");
         $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', "label" => "Camera ID",]);
@@ -104,16 +102,9 @@ class CamerasCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(CamerasRequest::class);
-        CRUD::addField([
-            'name'=>'id',
-            'type'=>'text',
-            'attributes' => [
-                'readonly' => 'readonly',
-            ],
-        ]);
+
         CRUD::addField(['name' => 'description', 'type' => 'text', "label" => "Description",]);
         CRUD::addField(['name' => 'url','type' => 'text',"label" => "Stream URL",]);
-        CRUD::addField(['name' => 'nn_url','type' => 'text',"label" => "Neural Network URL",]);
 
 
         CRUD::addField([

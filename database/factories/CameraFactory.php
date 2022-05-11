@@ -17,7 +17,6 @@ class CameraFactory extends Factory
             'lat_lang' => json_decode('{"lat": "36.236304", "lang": "37.115055"}'),
             'description' => $this->faker->text(20),
             'url' => 'https://www.youtube.com/watch?v=pk4mCPYVe5o&ab_channel=AbdAlrazakHAJSAAED',
-            'nn_url' => 'https://www.youtube.com/watch?v=pk4mCPYVe5o&ab_channel=AbdAlrazakHAJSAAED',
         ];
     }
 }

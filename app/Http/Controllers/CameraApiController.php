@@ -22,14 +22,44 @@ class CameraApiController extends BaseApiController
         $report->reporter_id = $stream;
         $report->reporter_type = Camera::class;
 
-        $report->path = $path;
+        $report->image = $path;
         $report->description = $description;
+        $report->lat_lang = (Camera::query()->find($stream)->first)->lat_lang;
 
         $report->save();
         $report->refresh();
 
         return $this->sendJsonResponse($report->toArray());
 
+    }
+
+
+
+
+    private function storeImage()
+    {
+        if ($image = request()->file('image')) {
+
+            $uploadFolder = 'fires';
+
+            $path = storage_path('app/public') . "/" . $uploadFolder . "/";
+
+            if (!file_exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $simage = Image::make($image);
+
+            $simage->resize(2048, 2048, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+
+            $simage->save($path . 'large' . $filename);
+
+            return $uploadFolder . "/" . 'large' . $filename;
+        }
+        return null;
     }
 
 }
