@@ -50,6 +50,18 @@ class ReportsCrudController extends CrudController
     {
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Report ID"]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
+        CRUD::addColumn([
+            'name' => 'nn_approval',
+            'type' => 'boolean',
+            'label'=>'NN Approval',
+            'option' => [1 => 'Yes', 0 => 'No'],
+            'wrapper' => [
+                'element' => 'span',
+                'class'   => static function ($crud, $column, $entry) {
+                    return 'badge badge-'.($entry->{$column['name']} ? 'success' : 'default');
+                },
+            ],
+        ],);
         CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
         CRUD::addColumn([

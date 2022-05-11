@@ -17,7 +17,6 @@ class CreateReportsTable extends Migration
             $table->id();
             $table->string('status')->nullable(true);
             $table->string('description')->nullable(true);
-            $table->string('path')->nullable(true);
             $table->integer('count')->nullable(true);
             $table->boolean('nn_approval')->default(false);
             $table->morphs('reporter');

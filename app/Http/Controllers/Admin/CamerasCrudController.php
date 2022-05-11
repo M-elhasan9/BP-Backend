@@ -50,19 +50,6 @@ class CamerasCrudController extends CrudController
         $this->crud->addButtonFromModelFunction("line", "Watch Stream", "openStream","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'number', "label" => "Camera ID",]);
-
-//        $this->crud->addColumn([
-//            // Select
-//            'label'     => 'URL',
-//            'type'      => 'text',
-//            'name'      => 'url', // the db column for the foreign key
-//            'wrapper'   => [
-//                'href' => function ($crud, $column, $entry, $related_key) {
-//                    return 'google.com';
-//                },
-//            ],
-//        ]);
-
         CRUD::addColumn(['name' => 'description', 'type' => 'text', "label" => "Description",]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location",]);
 
