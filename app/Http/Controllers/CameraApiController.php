@@ -32,39 +32,59 @@ class CameraApiController extends BaseApiController
         $report->lat_lang = Camera::query()->where('id','=',$stream)->first()->lat_lang;
 
         $report->save();
-        $report->refresh();
 
-        return $this->sendJsonResponse($report->toArray());
+
+        //$this->getTheSameFires($stream);
+
+
+
+        return $this->sendJsonResponse();
 
     }
 
 
-
-
-    private function storeImage()
+    public function getTheSameFires($camera_id)
     {
-        if ($image = request()->file('image')) {
+        $camera = Camera::query()->where('id', $camera_id)->get(); //TODO:
+        $oldReports = Report::query()->get();
 
-            $uploadFolder = 'fires';
+            foreach ($oldReports as $oldReport) {
+                $lat1 = $camera->lat_lang['lat'];
+                $lon1 = $camera->lat_lang['lng'];
+                //
+                $lat2 = $oldReport->lat_lang['lat'];
+                $lon2 = $oldReport->lat_lang['lng'];
+                //
+                $distanceRange = 1;
+                //
 
-            $path = storage_path('app/public') . "/" . $uploadFolder . "/";
+                $distance = $this->point2point_distance($lat1, $lon1, $lat2, $lon2);
+                if ($distance <= $distanceRange) {
+                    return array('distance' => $distance, 'fire' => $oldReport->toArray(), 'subscribe' => $camera);
+                }
 
-            if (!file_exists($path)) {
-                File::makeDirectory($path, 0755, true);
-            }
-
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $simage = Image::make($image);
-
-            $simage->resize(2048, 2048, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-
-            $simage->save($path . 'large' . $filename);
-
-            return $uploadFolder . "/" . 'large' . $filename;
         }
+
         return null;
+    }
+
+
+    public function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit = 'K')
+    {
+        $theta = $lon1 - $lon2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+
+        if ($unit == "K") {
+            return ($miles * 1.609344);
+        } else if ($unit == "N") {
+            return ($miles * 0.8684);
+        } else {
+            return $miles;
+        }
     }
 
 }

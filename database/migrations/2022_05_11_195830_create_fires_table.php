@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActiveFiresTable extends Migration
+class CreateFiresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateActiveFiresTable extends Migration
      */
     public function up()
     {
-        Schema::create('active_fires', function (Blueprint $table) {
+        Schema::create('fires', function (Blueprint $table) {
             $table->id();
             $table->json('lat_lang');
             $table->string('status')->nullable(true);
@@ -29,6 +29,6 @@ class CreateActiveFiresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('active_fires');
+        Schema::dropIfExists('fires');
     }
 }

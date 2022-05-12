@@ -124,7 +124,7 @@ class UserApiController extends BaseApiController
 
 
         $report->description = $description;
-        $report->lat_lang = ['lat' => $lat, 'lang' => $lang];
+        $report->lat_lang = ['lat' => $lat, 'lng' => $lang];
         $report->image = $this->storeImage();
 
         $report->save();
@@ -149,7 +149,7 @@ class UserApiController extends BaseApiController
         $subscribe = new Subscribe();
         $subscribe->user_id = $user_id;
         $subscribe->description = $description;
-        $subscribe->lat_lang = ['lat' => $lat, 'lang' => $lang];
+        $subscribe->lat_lang = ['lat' => $lat, 'lng' => $lang];
 
         $subscribe->save();
 
@@ -261,16 +261,16 @@ class UserApiController extends BaseApiController
 
     public function getFiresNearUser($user_id, $suggestReports = null)
     {
-        $subscribes = Subscribe::query()->where('user_id', $user_id)->get();
+        $subscribes = Subscribe::query()->where('user_id', $user_id)->get(); //TODO:
         $confirmedFires = $suggestReports ?? Report::query()->where('status', '=', 'Confirmed')->get();
 
         foreach ($subscribes as $sub) {
             foreach ($confirmedFires as $fire) {
                 $lat1 = $sub->lat_lang['lat'];
-                $lon1 = $sub->lat_lang['lang'];
+                $lon1 = $sub->lat_lang['lng'];
                 //
                 $lat2 = $fire->lat_lang['lat'];
-                $lon2 = $fire->lat_lang['lang'];
+                $lon2 = $fire->lat_lang['lng'];
                 //
                 $distanceRange = 10;   //0.11;
                 //
