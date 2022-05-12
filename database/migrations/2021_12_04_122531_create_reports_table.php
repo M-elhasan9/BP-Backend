@@ -23,6 +23,7 @@ class CreateReportsTable extends Migration
             $table->string('den_degree')->nullable(true);
             $table->json('lat_lang')->nullable(true);
             $table->string('image')->nullable(true);
+            $table->unsignedBigInteger('fire_id')->nullable(true);
             $table->timestamps();
         });
     }

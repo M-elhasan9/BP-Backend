@@ -31,6 +31,7 @@ class FireCrudController extends CrudController
         CRUD::setEntityNameStrings('fire', 'fires');
         $this->crud->enableExportButtons();
         $this->crud->denyAccess('create');
+        $this->crud->denyAccess('delete');
     }
 
     /**
@@ -74,19 +75,18 @@ class FireCrudController extends CrudController
     {
         CRUD::setValidation(FireRequest::class);
 
+        CRUD::addField([   // select_and_order
+            'name'  => 'status',
+            'label' => "Status",
+            'type'  => 'select2_from_array',
+            'allows_null' => false,
+            'options' => [
+                1 => "New",
+                2 => "Confirmed",
+                3 => "End",
+            ]
+        ],);
 
-        CRUD::addField([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
-        CRUD::addField(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addField(['name' => 'den_degree', 'type' => 'number', 'label' => "Degree of Danger"]);
 
 
@@ -109,5 +109,9 @@ class FireCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+    protected function setupShowOperation(){
+
+        $this->setupListOperation();
     }
 }
