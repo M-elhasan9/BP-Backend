@@ -17,4 +17,3 @@ Route::get('/', function () {
     return redirect("/admin");
 });
 
-Route::get("reports/{id}", "FireCrudController@getReport");

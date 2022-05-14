@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\FireRequest;
+use App\Models\Camera;
 use App\Models\Report;
+use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -41,12 +43,7 @@ class FireCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    public function getReport($id)
-    {
-        $data = Report::query()->where('id', $id)
-            ->select(['delivery_date', 'state', 'details']);
-        return datatables()->of($data)->toJson();
-    }
+
 
     protected function setupListOperation()
     {
@@ -62,52 +59,20 @@ class FireCrudController extends CrudController
             "attr" => "lat_lang",
             'marker_icon' => null
         ]);
-        $this->crud->addColumn(['name' => 'status',
+        CRUD::addColumn(['name' => 'status',
             'label' => "Status", 'type' => 'closure', 'function' =>
-            function ($entry) {
-                switch ($entry->status) {
-                    case 1:
-                        return "New";
-                    case 2:
-                        return "Confirmed";
-                    case 3:
-                        return "End";
-                    default:
-                        return "No Status";
-                }
-            },]);
-
-        $this->crud->addColumn([
-            'name' => 'reports',
-            'type' => 'datatable_view',
-            'titles' => [
-                'تاريخ التسليم', 'الحالة', 'تفاصيل'
-            ],
-
-            'columns' => [
-                [
-                    'name' => 'delivery_date',
-                ],
-                [
-                    'name' => 'delivery_date',
-                ],
-                [
-                    'name' => 'delivery_date',
-                ],
-                [
-                    'name' => 'delivery_date',
-                ],
-                [
-                    'name' => 'details'
-                ],
-            ],
-            'source' => backpack_url('reports/' . $this->crud->getCurrentEntryId()),
-            'key' => 'reports',
-        ]);
-
-
-
-
+                function ($entry) {
+                    switch ($entry->status) {
+                        case 1:
+                            return "New";
+                        case 2:
+                            return "Confirmed";
+                        case 3:
+                            return "End";
+                        default:
+                            return "No Status";
+                    }
+                },]);
 
 
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
@@ -116,7 +81,7 @@ class FireCrudController extends CrudController
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
-         CRUD::addColumn(['name' => 'price', 'type' => 'number']);
+         * CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
 
@@ -131,9 +96,9 @@ class FireCrudController extends CrudController
         CRUD::setValidation(FireRequest::class);
 
         CRUD::addField([   // select_and_order
-            'name'  => 'status',
+            'name' => 'status',
             'label' => "Status",
-            'type'  => 'select2_from_array',
+            'type' => 'select2_from_array',
             'allows_null' => false,
             'options' => [
                 1 => "New",
@@ -143,10 +108,6 @@ class FireCrudController extends CrudController
         ],);
 
         CRUD::addField(['name' => 'den_degree', 'type' => 'number', 'label' => "Degree of Danger"]);
-
-
-
-
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -161,8 +122,79 @@ class FireCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupShowOperation(){
+    protected function setupShowOperation()
+    {
 
-        $this->setupListOperation();
+        CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
+        CRUD::addColumn([
+            'name' => 'lat_lang',
+            'label' => "Location",
+            'type' => 'latlng_map',
+            'google_api_key' => config('services.google_places.key'),
+            'map_style' => 'height: 300px; width:auto',
+            'default_zoom' => 17,
+            'geolocate_icon' => 'fa-crosshairs',
+            "attr" => "lat_lang",
+            'marker_icon' => null
+        ]);
+        CRUD::addColumn(['name' => 'status',
+            'label' => "Status", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    switch ($entry->status) {
+                        case 1:
+                            return "New";
+                        case 2:
+                            return "Confirmed";
+                        case 3:
+                            return "End";
+                        default:
+                            return "No Status";
+                    }
+                },]);
+
+        $this->crud->addColumn([
+            'name' => 'reports',
+            'type' => 'datatable_view',
+            'titles' => [
+                'Created at', 'Description', 'Degree', 'Reporter Type'
+            ],
+
+            'columns' => [
+
+                [
+                    'name' => 'created_at',
+                    'type' => 'link',
+                    'link' => '/admin/reports/?/show',
+                    'attribute' => 'created_at',
+                    'key' => 'id'
+                ],
+                [
+                    'name' => 'description',
+                ],
+                [
+                    'name' => 'den_degree',
+                ],
+                [
+                    'name' => 'reporter_type',
+                    'type' => 'select',
+                    'options' => [
+                        User::class => 'User',
+                        Camera::class => 'Camera'
+                    ]
+                ],
+            ],
+            'source' => backpack_url('reports/' . $this->crud->getCurrentEntryId()),
+            'key' => 'reports',
+            'tab' => "tab"]);
+
+
+        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
+
+    }
+
+    public function getReport($id)
+    {
+        $data = Report::query()->where('id', $id)->get();
+        return datatables()->of($data)->toJson();
     }
 }
