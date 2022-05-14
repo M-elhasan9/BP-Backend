@@ -194,7 +194,7 @@ class FireCrudController extends CrudController
 
     public function getReport($id)
     {
-        $data = Report::query()->where('id', $id)->get();
+        $data = Report::query()->where('fire_id', $id)->get();
         return datatables()->of($data)->toJson();
     }
 }

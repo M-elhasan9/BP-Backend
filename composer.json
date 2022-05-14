@@ -9,7 +9,7 @@
         "ext-json": "*",
         "backpack/crud": "4.1.*",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.4",
         "intervention/image": "^2.7",
         "laravel-notification-channels/fcm": "~2.0",
         "laravel/framework": "^8.65",

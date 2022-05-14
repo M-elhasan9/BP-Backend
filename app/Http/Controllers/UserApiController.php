@@ -10,7 +10,7 @@ use App\Models\Report;
 use App\Models\Subscribe;
 use App\Models\User;
 use App\Ntfs\FireNearUser;
-
+use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -120,8 +120,6 @@ class UserApiController extends BaseApiController
 
         $report->reporter_id = $user_id;
         $report->reporter_type = User::class;
-        $report->status = "New";
-
 
         $report->description = $description;
         $report->lat_lang = ['lat' => $lat, 'lng' => $lang];
@@ -130,8 +128,22 @@ class UserApiController extends BaseApiController
         $report->save();
         $report->refresh();
 
+        $response = Http::get('http://nn.yesilkalacak.com/check', [
+            'path' => $report->image,
+        ]);
+        $r = $response->json();
 
-        $this->checkAndNotifyUsersNearReportFire($report, true); // todo: for test only
+        $report->nn_approval = $r['detect'];
+        $report->den_degree = $r['decree'];
+
+        $report->image = $report->image."RES.jpg";
+
+        $report->save();
+        $report->refresh();
+
+
+
+        //$this->checkAndNotifyUsersNearReportFire($report, true); // todo: for test only
 
 
         return $this->sendJsonResponse($report->toArray());
