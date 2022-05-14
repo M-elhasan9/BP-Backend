@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Camera;
+use App\Models\Fire;
 use App\Models\Report;
 use App\Models\Subscribe;
 use App\Models\User;
@@ -23,7 +24,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UserSeeder::class);
        //Camera::factory(5)->create();
-        //Report::factory(10)->create();
+       // Report::factory(10)->create();
+        //Fire::factory(3)->create();
         //Subscribe::factory(10)->create();
        // User::factory(10)->create();
     }
