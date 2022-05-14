@@ -6,6 +6,7 @@ use App\Http\Requests\ApiReportsRequest;
 use App\Http\Requests\ApiUserLogInRequest;
 use App\Http\Requests\ApiUserSendCodeRequest;
 use App\Http\Requests\SubscribesRequest;
+use App\Models\Fire;
 use App\Models\Report;
 use App\Models\Subscribe;
 use App\Models\User;
@@ -136,11 +137,14 @@ class UserApiController extends BaseApiController
         $report->nn_approval = $r['detect'];
         $report->den_degree = $r['decree'];
 
-        $report->image = $report->image."RES.jpg";
+        if ($r['detect']) {
+            $report->image = $report->image . "RES.jpg";
+        }
 
         $report->save();
         $report->refresh();
 
+        $this->fireNearMe($report,$lat,$lang);
 
 
         //$this->checkAndNotifyUsersNearReportFire($report, true); // todo: for test only
@@ -315,6 +319,8 @@ class UserApiController extends BaseApiController
             return $miles;
         }
     }
+
+
 
 
 }
