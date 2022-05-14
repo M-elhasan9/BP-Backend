@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Fire extends Model
 {
-    use CrudTrait;
+    use CrudTrait,HasFactory;
 
     /*
     |--------------------------------------------------------------------------
