@@ -53,6 +53,14 @@ class Report extends Model
         return $this->morphTo();
     }
 
+    public function getFire()
+{
+    return $this->fire;
+}
+    public function fire()
+    {
+        return $this->belongsTo(Fire::class, );
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

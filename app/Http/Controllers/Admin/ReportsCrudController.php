@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ReportsRequest;
+use App\Models\Fire;
 use App\Models\Report;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -36,6 +37,9 @@ class ReportsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/reports');
         CRUD::setEntityNameStrings('report', 'reports');
         $this->crud->enableExportButtons();
+        $this->crud->denyAccess('create');
+        $this->crud->denyAccess('delete');
+        $this->crud->denyAccess('update');
 
 
     }
@@ -62,7 +66,6 @@ class ReportsCrudController extends CrudController
                 },
             ],
         ],);
-        CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
         CRUD::addColumn([
             "name" => "image",
@@ -73,6 +76,21 @@ class ReportsCrudController extends CrudController
             'prefix' => "/storage/"
         ]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
+        CRUD::addColumn(['name' => 'fire_id', 'type' => 'text', 'label' => "Fire ID"]);
+
+        CRUD::column('fire')
+            ->type('select')
+            ->entity('fire')
+            ->attribute('id')
+            ->model(Fire::class)
+            ->wrapper([
+                'href' => function ($crud, $column, $entry, $related_key) {
+                    return backpack_url('fire/'.$related_key.'/show');
+                },
+            ]);
+
+
+
         CRUD::addColumn([
             'name'     => 'reporter_type',
             'label'    => 'Reported From',
@@ -90,7 +108,6 @@ class ReportsCrudController extends CrudController
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Report ID"]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
-        CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
         CRUD::addColumn(['name' => 'reporter_id', 'type' => 'text', "label" => "Reporter ID"]);
@@ -119,50 +136,7 @@ class ReportsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupUpdateOperation()
-    {
-        CRUD::setValidation(ReportsRequest::class);
 
-        CRUD::addField(['name' => 'den_degree', 'type' => 'select_from_array',
-            'label' => "Danger degree",
-            'options' => [
-                'High' => 'High',
-                'Medium' => 'Medium',
-                'Low' => 'Low',
-            ],
-            'allows_null' => false,
-        ]);
-
-        CRUD::addField(['name' => 'status', 'type' => 'select_from_array', 'label' => "Status",
-            'options' => [
-                'New' => 'New',
-                'Confirmed' => 'Confirmed',
-                'End' => 'End',
-            ],
-            'allows_null' => false,
-        ]);
-        CRUD::addField(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
-
-        CRUD::addField([
-            'name' => 'lat_lang',
-            'label' => "location",
-            'type' => 'latlng',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "address",
-            'marker_icon' => null
-        ]);
-        CRUD::addField([
-            "name" => "image",
-            "type" => "image",
-            'label' => "Image",
-            'upload' => true,
-            'crop' => true,
-            'prefix' => "/storage/"
-        ]);
-    }
 
 
 }
