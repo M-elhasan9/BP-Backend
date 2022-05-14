@@ -54,7 +54,17 @@ class FireCrudController extends CrudController
             "attr" => "lat_lang",
             'marker_icon' => null
         ]);
-        CRUD::addColumn(['name' => 'status', 'type' => 'text', 'label' => "Status"]);
+        CRUD::addColumn([   // select_and_order
+            'name'  => 'status',
+            'label' => "Status",
+            'type'  => 'select2_from_array',
+            'allows_null' => false,
+            'options' => [
+                1 => "New",
+                2 => "Confirmed",
+                3 => "End",
+            ]
+        ],);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
 
 
@@ -106,10 +116,6 @@ class FireCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
-    {
-        $this->setupCreateOperation();
-    }
     protected function setupShowOperation(){
 
         $this->setupListOperation();

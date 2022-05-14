@@ -66,7 +66,7 @@ class ReportsCrudController extends CrudController
                 },
             ],
         ],);
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
+        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
         CRUD::addColumn([
             "name" => "image",
             "type" => "image",
@@ -76,9 +76,8 @@ class ReportsCrudController extends CrudController
             'prefix' => "/storage/"
         ]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
-        CRUD::addColumn(['name' => 'fire_id', 'type' => 'text', 'label' => "Fire ID"]);
 
-        CRUD::column('fire')
+        CRUD::column('fire')->lable("Fire ID")
             ->type('select')
             ->entity('fire')
             ->attribute('id')
@@ -108,7 +107,7 @@ class ReportsCrudController extends CrudController
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Report ID"]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of danger"]);
+        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
         CRUD::addColumn(['name' => 'reporter_id', 'type' => 'text', "label" => "Reporter ID"]);
         CRUD::addColumn([
