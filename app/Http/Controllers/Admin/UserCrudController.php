@@ -36,6 +36,7 @@ class UserCrudController extends CrudController
         CRUD::setEntityNameStrings('user', 'users');
         $this->crud->denyAccess('create');
         $this->crud->enableExportButtons();
+       // $this->set('setFromDb',false);
 
     }
 
