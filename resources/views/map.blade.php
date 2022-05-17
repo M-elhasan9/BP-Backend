@@ -2,16 +2,62 @@
 
 
 <link rel="stylesheet" href="{{asset('css/app.css')}}">
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+
 <script src="https://api.windy.com/assets/map-forecast/libBoot.js"></script>
 
 @section('content')
-    <div id="windy" style="width: 100%; height: 100%;"></div>
+    <div class="row">
+        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="without">
+        <label for="html">بدون طقس</label><br>
+        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="wind">
+        <label for="css">حركة الرياح</label><br>
+        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="temp">
+        <label for="javascript">الحرارة</label>
+    </div>
 
 
+
+    <div id="windy" style="width: 100%; height: 90%;"></div>
+
+    <style>
+        #map-container {
+            z-index: 0;
+        }
+    </style>
 
     <script>
+        var windy;
+        var store;
+
+        function hideWindyElements() {
+            document.getElementById("bottom").style['display'] = "none"
+            document.getElementsByClassName("basemap-layer")[0].style['display'] = "none"
+            document.getElementsByClassName("labels-layer")[0].style['display'] = "none"
+
+            document.getElementById("logo-wrapper").style['display'] = "none"
+            document.getElementById("embed-zoom").style['display'] = "none"
+            document.getElementById("mobile-ovr-select").style['display'] = "none"
+            if (windy)
+                windy.style['display'] = "none"
+        }
+
+        function windyOnclick(r) {
+            if (r.value == "wind" || r.value == "temp") {
+                windy.style['display'] = "block"
+                document.getElementById("bottom").style['display'] = "block"
+                document.getElementsByClassName("basemap-layer")[0].style['display'] = "block"
+                document.getElementsByClassName("labels-layer")[0].style['display'] = "block"
+                //windy.style['opacity'] = "0.5"
+                if (r.value == "temp")
+                    store.set("overlay", "temp")
+                else
+                    store.set("overlay", "wind")
+            } else {
+                hideWindyElements();
+            }
+        }
 
         /**
          * Leaflet.geojsonCSS
@@ -34,11 +80,10 @@
                 return new L.GeoJSON.CSS(a, b)
             })
         }(window, document);
-
+        //
         const options = {
             // Required: API key
             key: 'r16ylTSzt123Cjht7eKgaRvIn1gVLolu', // REPLACE WITH YOUR KEY !!!
-
 
             // Optional: Initial state of the map
             lat: 39.24,
@@ -52,14 +97,66 @@
             // windyAPI is ready, and contain 'map', 'store',
             // 'picker' and other usefull stuff
 
-            const {map} = windyAPI;
+            const {map, store} = windyAPI;
             // .map is instance of Leaflet map
+            this.store = store
+            var littleton = L.marker([38.0305851, 33.6290171]).bindPopup('This is Littleton, CO.'),
+                denver = L.marker([38.0205851, 33.6390171]).bindPopup('This is Denver, CO.'),
+                aurora = L.marker([38.0405851, 33.6490171]).bindPopup('This is Aurora, CO.'),
+                golden = L.marker([38.0505851, 33.6590171]).bindPopup('This is Golden, CO.');
 
-            //    L.popup()
-            //    .setLatLng([50.4, 14.3])
-            //  .setContent('Hello World')
-            //   .openOn(map);
+            var cities = L.layerGroup([littleton, denver, aurora, golden]);
 
+            var crownHill = L.marker([38.1205851, 33.6390171]).bindPopup('This is Crown Hill Park.'),
+                rubyHill = L.marker([38.1305851, 33.6390171]).bindPopup('This is Ruby Hill Park.');
+
+            var parks = L.layerGroup([crownHill, rubyHill]);
+
+            var myLayer1 = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            var myLayer2 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            const Map_BaseLayer = {'خريطة التضاريس': myLayer1, 'الخريطة الافتراضية': myLayer2};
+
+            const Map_AddLayer = {
+                'الحرائق الجديدة': parks,
+                'الحرائق الفعلية': parks,
+                'الحرائق المنتهية': parks,
+                'تقارير الأشخص': cities,
+            };
+
+            L.control
+                .layers(Map_BaseLayer, Map_AddLayer, {
+                    collapsed: false,
+                })
+                .addTo(map);
+
+            var marker = L.marker([38.0105851, 33.6190171]).addTo(map);
+
+            L.marker([38.0105851, 33.6190171], {
+                icon: L.icon({
+                    iconUrl: 'https://server.yesilkalacak.com/images/fire.png',
+                    iconSize: [30, 30], // size of the icon
+                    iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
+                    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+                })
+            }).addTo(map).bindPopup("I am a green leaf.");
+
+            var circle = L.circle([38.0105851, 30.6190171], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 500
+            }).addTo(map);
+
+            var polygon = L.polygon([
+                [37.21489152908325, 28.05506145183324,],
+                [36.41577129364014, 29.352586015356876],
+                [37.016543769836426, 29.5539867694403]
+            ]).addTo(map);
 
             json = {
                 "type": "FeatureCollection",
@@ -69,12 +166,9 @@
                         "geometry": {
                             "type": "Polygon",
                             "coordinates": [[
-                                [ 28.05506145183324,37.21489152908325,],
-                                [29.352586015356876,36.41577129364014],
-                                [29.5539867694403,        37.016543769836426]
-
-
-
+                                [28.05506145183324, 37.21489152908325,],
+                                [29.352586015356876, 36.41577129364014],
+                                [29.5539867694403, 37.016543769836426]
                             ]]
                         },
                         "style": {
@@ -105,149 +199,51 @@
                         },
                         "style": {
                             "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
+                                "iconUrl": "http://server.yesilkalacak.com/images/fire.png",
                                 "iconSize": [50, 50],
                                 "iconAnchor": [10, 10]
                             }
                         }
                     },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [34.2891386,37.5524769]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [30, 30],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [28.7921306,37.1543016]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [70, 70],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [30.6190171,37.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [20, 20],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [29.6190171,40.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [20, 20],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [33.6190171,40.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [10, 10],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [31.6190171,39.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [30, 30],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [32.6190171,39.8105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [30, 30],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [30.6190171,38.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [30, 30],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [33.6190171,38.0105851]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://yesilkalacak.com/images/fire.png",
-                                "iconSize": [30, 30],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
+
                 ]
             }
+
             L.geoJson.css(json).addTo(map);
 
+            var popup = L.popup();
+
+            function onMapClick(e) {
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent("You clicked the map at " + e.latlng.toString())
+                    .openOn(map);
+            }
+
+            map.on('click', onMapClick);
+
+
+            var imageUrl = 'https://server.yesilkalacak.com/storage/fires/f%20(45).jpgRES.jpg';
+            var altText = 'detect by AI';
+            var latLngBounds = L.latLngBounds([[37.0105851, 33.6190171], [37.1105851, 33.7190171]]);
+
+            var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
+                opacity: 0.8,
+                alt: altText,
+                interactive: true
+            }).addTo(map);
+
+            document.getElementsByClassName("leaflet-control-container")[0].style['display'] = "block"
+
+            hideWindyElements();
+            var t = setInterval(function () {
+                if (document.getElementsByClassName("overlay-layer") && windy == null) {
+                    windy = document.getElementsByClassName("overlay-layer")[0];
+                    windy.style['display'] = "none"
+                }
+            }, 10);
+
         });
-
-        // var map = L.map('map').setView([39.24, 35.19], 7);
-
-        //  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        //   }).addTo(map);
 
 
     </script>
