@@ -50,7 +50,6 @@ class CameraApiController extends BaseApiController
             $report->fire_id = $fire->id;
             $report->save();
         } else {
-
             $report->fire_id = $query->id;
             $report->save();
         }

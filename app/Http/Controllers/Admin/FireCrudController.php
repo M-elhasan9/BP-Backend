@@ -91,7 +91,7 @@ class FireCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupUpdateOperation()
     {
         CRUD::setValidation(FireRequest::class);
 
@@ -107,7 +107,6 @@ class FireCrudController extends CrudController
             ]
         ],);
 
-        CRUD::addField(['name' => 'den_degree', 'type' => 'number', 'label' => "Degree of Danger"]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -194,7 +193,7 @@ class FireCrudController extends CrudController
 
     public function getReport($id)
     {
-        $data = Report::query()->where('id', $id)->get();
+        $data = Report::query()->where('fire_id', $id)->get();
         return datatables()->of($data)->toJson();
     }
 }

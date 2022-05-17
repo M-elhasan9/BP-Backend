@@ -25,7 +25,7 @@ class FireRequest extends FormRequest
     public function rules()
     {
         return [
-             'den_degree' => 'required|lte:100|gte:0',
+             //'den_degree' => 'required|lte:100|gte:0',
              'status' => 'required',
         ];
     }

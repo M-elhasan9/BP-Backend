@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fire;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -11,6 +12,24 @@ abstract class BaseApiController extends Controller
 {
 
     use AuthorizesRequests, DispatchesJobs;
+
+    public function fireNearMe($report,$lat,$lng)
+    {
+        $query = Fire::query()->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
+            ->where('status', '=', 2)->first();
+
+        if ($query == null) {
+            $fire = new Fire();
+            $fire->lat_lang = $report->lat_lang;
+            $fire->status = 2;
+            $fire->den_degree = $report->den_degree;
+            $fire->save();
+            $report->fire_id = $fire->id;
+        } else {
+            $report->fire_id = $query->id;
+        }
+        $report->save();
+    }
 
     protected function getLimitedQuery(Builder $query): Builder
     {
