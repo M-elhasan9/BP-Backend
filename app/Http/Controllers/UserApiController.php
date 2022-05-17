@@ -193,7 +193,7 @@ class UserApiController extends BaseApiController
 
     public function getConfirmedReports()
     {
-        $confirmedFires = Report::query()->where('status', '=', 'Confirmed')->get();
+        $confirmedFires = Fire::query()->where('status', '=', 'Confirmed')->get();
 
         return $this->sendJsonResponse($confirmedFires->toArray());
     }
