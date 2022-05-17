@@ -62,9 +62,9 @@
                             indexLabelFontSize: 16,
                             indexLabel: "{label} - %{y}",
                             dataPoints: [
-                                {y: {{number_format(\App\Models\Fire::query()->where('status','=',1)->count(),2)}}, label: "New"},
-                                {y: {{number_format(\App\Models\Fire::query()->where('status','=',3)->count(),2)}}, label: "End"},
-                                {y: {{number_format(\App\Models\Fire::query()->where('status','=',2)->count(),2)}}, label: "Confirmed"},
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',1)->count())/(\App\Models\Fire::count())*100,2)}}, label: "New"},
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',3)->count())/(\App\Models\Fire::count())*100,2)}}, label: "End"},
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',2)->count())/(\App\Models\Fire::count())*100,2)}}, label: "Confirmed"},
                             ]
                         }]
                     });
