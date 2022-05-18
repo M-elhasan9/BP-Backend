@@ -33,7 +33,7 @@ class FireCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/fire');
         CRUD::setEntityNameStrings('fire', 'fires');
         $this->crud->enableExportButtons();
-        $this->crud->set('show.setFromDb',false);
+        $this->crud->set('show.setFromDb', false);
         $this->crud->denyAccess('create');
         $this->crud->denyAccess('delete');
     }
@@ -48,7 +48,7 @@ class FireCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify","beginning");
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
 
@@ -68,7 +68,13 @@ class FireCrudController extends CrudController
                 },]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
+        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
+
+        CRUD::addColumn(['name' => 'count',
+            'label' => "Reports Count", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    return Report::query()->where('fire_id', '=', $entry->id)->count();
+                },]);
 
 
         /**
@@ -116,7 +122,7 @@ class FireCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
-        $this->crud->addButtonFromModelFunction("line", "Send Notification", "sendNotify","beginning");
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "sendNotify", "beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
         CRUD::addColumn(['name' => 'status',
@@ -136,15 +142,19 @@ class FireCrudController extends CrudController
 
         CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
 
+        CRUD::addColumn(['name' => 'count',
+            'label' => "Reports Count", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    return Report::query()->where('fire_id', '=', $entry->id)->count();
+                },]);
+
         $this->crud->addColumn([
             'name' => 'reports',
             'type' => 'datatable_view',
             'titles' => [
                 'Created at', 'Description', 'Degree', 'Reporter Type'
             ],
-
             'columns' => [
-
                 [
                     'name' => 'created_at',
                     'type' => 'link',
