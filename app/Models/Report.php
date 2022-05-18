@@ -54,12 +54,13 @@ class Report extends Model
     }
 
     public function getFire()
-{
-    return $this->fire;
-}
+    {
+        return $this->fire;
+    }
+
     public function fire()
     {
-        return $this->belongsTo(Fire::class, );
+        return $this->belongsTo(Fire::class);
     }
     /*
     |--------------------------------------------------------------------------

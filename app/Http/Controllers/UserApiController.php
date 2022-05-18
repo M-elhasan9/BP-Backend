@@ -158,7 +158,7 @@ class UserApiController extends BaseApiController
     {
         $description = $request->input("description");
         $lat = $request->input("lat");
-        $lang = $request->input("lang");
+        $lang = $request->input("lng");
 
         $user_id = $request->user()->id;
 
