@@ -2,11 +2,29 @@
 
 
 <link rel="stylesheet" href="{{asset('css/app.css')}}">
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 
 <script src="https://api.windy.com/assets/map-forecast/libBoot.js"></script>
 
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview/dist/L.Control.ResetView.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview/dist/L.Control.ResetView.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+<script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+<link rel="stylesheet" href="<?php echo url('css/fullscreen.css')?>"/>
+<script src="<?php echo url('js/fullscreen.js')?>"></script>
+
+<link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
+<script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
+
+<script src="<?php echo url('js/leaflet.browser.print.min.js')?>"></script>
+
+<link rel="stylesheet" href="<?php echo url('css/Leaflet-Coordinates-Control.css')?>"/>
+<script src="<?php echo url('js/Leaflet-Coordinates-Control.js')?>"></script>
 @section('content')
     <div class="row">
         <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="without">
@@ -220,7 +238,7 @@
                     .openOn(map);
             }
 
-            map.on('click', onMapClick);
+           // map.on('click', onMapClick);
 
 
             var imageUrl = 'https://server.yesilkalacak.com/storage/fires/f%20(45).jpgRES.jpg';
@@ -243,9 +261,92 @@
                 }
             }, 10);
 
+            // create a fullscreen button and add it to the map
+            L.control.fullscreen({
+                position: 'topleft', // change the position of the button can be topleft, topright, bottomright or bottomleft, default topleft
+                title: 'Show me the fullscreen !', // change the title of the button, default Full Screen
+                titleCancel: 'Exit fullscreen mode', // change the title of the button when fullscreen is on, default Exit Full Screen
+                content: null, // change the content of the button, can be HTML, default null
+                forceSeparateButton: true, // force separate button to detach from zoom buttons, default false
+                forcePseudoFullscreen: true, // force use of pseudo full screen even if full screen API is available, default false
+                fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
+            }).addTo(map);
+
+            L.control.resetView({
+                position: "topleft",
+                title: "Reset view",
+                latlng: L.latLng([39.24, 35.19]),
+                zoom: 6,
+            }).addTo(map);
+            if (!map.restoreView()) {
+                map.setView([39.24, 35.19], 6);
+            }
+            map.pm.addControls({
+                position: 'topleft',
+                drawCircle: false,
+            });
+
+            var c = new L.Control.Coordinates();
+            c.addTo(map);
+            map.on('click', function(e) {
+                c.setCoordinates(e);
+            });
+            L.control.polylineMeasure({"showClearControl":true}).addTo(map);
+            L.control.browserPrint({position: 'topleft', title: 'Print ...'}).addTo(map);
+
         });
 
 
+        (function() {
+            var RestoreViewMixin = {
+                restoreView: function () {
+                    if (!storageAvailable('localStorage')) {
+                        return false;
+                    }
+                    var storage = window.localStorage;
+                    if (!this.__initRestore) {
+                        this.on('moveend', function (e) {
+                            if (!this._loaded)
+                                return;  // Never access map bounds if view is not set.
+
+                            var view = {
+                                lat: this.getCenter().lat,
+                                lng: this.getCenter().lng,
+                                zoom: this.getZoom()
+                            };
+                            storage['mapView'] = JSON.stringify(view);
+                        }, this);
+                        this.__initRestore = true;
+                    }
+
+                    var view = storage['mapView'];
+                    try {
+                        view = JSON.parse(view || '');
+                        this.setView(L.latLng(view.lat, view.lng), view.zoom, true);
+                        return true;
+                    }
+                    catch (err) {
+                        return false;
+                    }
+                }
+            };
+
+            function storageAvailable(type) {
+                try {
+                    var storage = window[type],
+                        x = '__storage_test__';
+                    storage.setItem(x, x);
+                    storage.removeItem(x);
+                    return true;
+                }
+                catch(e) {
+                    console.warn("Your browser blocks access to " + type);
+                    return false;
+                }
+            }
+
+            L.Map.include(RestoreViewMixin);
+        })();
     </script>
 @endsection
 
