@@ -13,7 +13,7 @@ abstract class BaseApiController extends Controller
 
     use AuthorizesRequests, DispatchesJobs;
 
-    public function fireNearMe($report,$lat,$lng)
+    public function fireNearMe($report, $lat, $lng)
     {
         $query = Fire::query()->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
             ->where('status', '=', 2)->first();

@@ -144,11 +144,7 @@ class UserApiController extends BaseApiController
         $report->save();
         $report->refresh();
 
-        $this->fireNearMe($report,$lat,$lang);
-
-
-        //$this->checkAndNotifyUsersNearReportFire($report, true); // todo: for test only
-
+        $this->fireNearMe($report, $lat, $lang);
 
         return $this->sendJsonResponse($report->toArray());
 
@@ -168,7 +164,6 @@ class UserApiController extends BaseApiController
         $subscribe->lat_lang = ['lat' => $lat, 'lng' => $lang];
 
         $subscribe->save();
-
 
         return $this->sendJsonResponse($subscribe->toArray());
     }
@@ -319,8 +314,6 @@ class UserApiController extends BaseApiController
             return $miles;
         }
     }
-
-
 
 
 }

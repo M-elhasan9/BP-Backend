@@ -37,6 +37,7 @@ class ReportsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/reports');
         CRUD::setEntityNameStrings('report', 'reports');
         $this->crud->enableExportButtons();
+        $this->crud->set('show.setFromDb',false);
         $this->crud->denyAccess('create');
         $this->crud->denyAccess('delete');
         $this->crud->denyAccess('update');
@@ -119,10 +120,11 @@ class ReportsCrudController extends CrudController
     protected function setupShowOperation()
     {
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Report ID"]);
+        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
         CRUD::addColumn(['name' => 'created_at', 'type' => 'datetime', 'label' => "Reported at"]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
         CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
-        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
+
         CRUD::addColumn(['name' => 'reporter_id', 'type' => 'text', "label" => "Reporter ID"]);
         CRUD::addColumn([
             'name'     => 'reporter_type',

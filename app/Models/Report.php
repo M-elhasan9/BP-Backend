@@ -21,8 +21,8 @@ class Report extends Model
     protected $table = 'reports';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    protected $casts = [
-        'lat_lang' => "json",
+    protected $casts =[
+        'lat_lang'=>"object",
     ];
     protected $fillable = [
         'id',

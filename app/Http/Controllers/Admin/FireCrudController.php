@@ -33,6 +33,7 @@ class FireCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/fire');
         CRUD::setEntityNameStrings('fire', 'fires');
         $this->crud->enableExportButtons();
+        $this->crud->set('show.setFromDb',false);
         $this->crud->denyAccess('create');
         $this->crud->denyAccess('delete');
     }
@@ -47,18 +48,10 @@ class FireCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify","beginning");
+
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
-        CRUD::addColumn([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng_map',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
+
         CRUD::addColumn(['name' => 'status',
             'label' => "Status", 'type' => 'closure', 'function' =>
                 function ($entry) {
@@ -123,19 +116,9 @@ class FireCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "sendNotify","beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
-        CRUD::addColumn([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng_map',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
         CRUD::addColumn(['name' => 'status',
             'label' => "Status", 'type' => 'closure', 'function' =>
                 function ($entry) {
@@ -150,6 +133,8 @@ class FireCrudController extends CrudController
                             return "No Status";
                     }
                 },]);
+
+        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
 
         $this->crud->addColumn([
             'name' => 'reports',
@@ -187,7 +172,7 @@ class FireCrudController extends CrudController
             'tab' => "tab"]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
+        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
 
     }
 

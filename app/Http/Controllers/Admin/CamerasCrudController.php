@@ -52,7 +52,7 @@ class CamerasCrudController extends CrudController
 
         CRUD::addColumn(['name' => 'id', 'type' => 'number', "label" => "Camera ID",]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', "label" => "Description",]);
-        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location",]);
+        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -76,17 +76,8 @@ class CamerasCrudController extends CrudController
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', "label" => "Camera ID",]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', "label" => "Description",]);
-        CRUD::addColumn([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng_map',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
+        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
+
     }
 
     protected function setupCreateOperation()

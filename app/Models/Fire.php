@@ -34,6 +34,10 @@ class Fire extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function sendNotify($crud = false)
+    {
+        return '<a class="btn btn-sm btn-link" target="_blank" href="#" data-toggle="tooltip"  title="notify custom button."><i class="la la-bell"></i> Send Notify</a>';
+    }
 
     /*
     |--------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class Subscribe extends Model
     // public $timestamps = false;
 
     protected $casts =[
-        'lat_lang'=>"json",
+        'lat_lang'=>"object",
     ];
 
     protected $fillable=[
