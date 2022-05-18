@@ -91,9 +91,9 @@ class ReportsCrudController extends CrudController
 //            'label' => "Fire ID"]);
 
 
-        CRUD::column('fire')->lable("Fire ID")
+        CRUD::column('fire_id')->lable("Fire ID")
             ->type('select')
-            ->entity('fire')
+            ->entity('fires')
             ->attribute('id')
             ->model(Fire::class)
             ->wrapper([
