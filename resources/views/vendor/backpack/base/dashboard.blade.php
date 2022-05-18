@@ -40,11 +40,45 @@
 
                     </div>
                 </div>
-
-
-                <!-- /.col-->
             </div>
             <!-- /.row-->
+
+            <br>
+            <script class="p-4">
+                window.onload = function () {
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        theme: "light2", // "light1", "light2", "dark1", "dark2"
+                        exportEnabled: true,
+                        animationEnabled: true,
+                        title: {
+                            text: "A graph showing the percentage of fires by state until {{ date('Y-m-d') }}"
+                        },
+                        data: [{
+                            type: "pie",
+                            startAngle: 25,
+                            toolTipContent: "<b>{label}</b>: {y}%",
+                            showInLegend: "true",
+                            legendText: "{label}",
+                            indexLabelFontSize: 16,
+                            indexLabel: "{label} - %{y}",
+                            dataPoints: [
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',1)->count())/(\App\Models\Fire::count())*100,2)}}, label: "New"},
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',3)->count())/(\App\Models\Fire::count())*100,2)}}, label: "End"},
+                                {y: {{number_format((\App\Models\Fire::query()->where('status','=',2)->count())/(\App\Models\Fire::count())*100,2)}}, label: "Confirmed"},
+                            ]
+                        }]
+                    });
+                    chart.render();
+                }
+            </script>
+
+
+            <body>
+            <div class="" id="chartContainer" style="height: 500px; width: 100%;"></div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            </body>
+
+
         </div>
     </div>
 

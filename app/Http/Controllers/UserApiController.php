@@ -114,7 +114,7 @@ class UserApiController extends BaseApiController
     {
         $description = $request->input("description");
         $lat = $request->input("lat");
-        $lang = $request->input("lang");
+        $lang = $request->input("lng");
         $user_id = auth()->id();
 
         $report = new Report();
@@ -158,7 +158,7 @@ class UserApiController extends BaseApiController
     {
         $description = $request->input("description");
         $lat = $request->input("lat");
-        $lang = $request->input("lang");
+        $lang = $request->input("lng");
 
         $user_id = $request->user()->id;
 
@@ -193,7 +193,7 @@ class UserApiController extends BaseApiController
 
     public function getConfirmedReports()
     {
-        $confirmedFires = Report::query()->where('status', '=', 'Confirmed')->get();
+        $confirmedFires = Fire::query()->where('status', '=', 2)->get();
 
         return $this->sendJsonResponse($confirmedFires->toArray());
     }
