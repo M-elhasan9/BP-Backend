@@ -17,7 +17,7 @@ class CreateFiresTable extends Migration
             $table->id();
             $table->json('lat_lang');
             $table->string('status')->nullable(true);
-            $table->string('den_degree')->nullable(true);
+            $table->string('den_degree')->default(0);
             $table->timestamps();
         });
     }

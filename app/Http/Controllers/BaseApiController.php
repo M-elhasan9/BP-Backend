@@ -22,7 +22,7 @@ abstract class BaseApiController extends Controller
             $fire = new Fire();
             $fire->lat_lang = $report->lat_lang;
             $fire->status = 2;
-            $fire->den_degree = $report->den_degree;
+           // $fire->den_degree = $report->den_degree;
             $fire->save();
             $report->fire_id = $fire->id;
         } else {

@@ -68,7 +68,25 @@ class FireCrudController extends CrudController
                 },]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
+        CRUD::addColumn(['name' => 'den_degree',
+            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    switch ($entry->den_degree) {
+                        case 1:
+                            return "Fake";
+                        case 2:
+                            return "Low";
+                        case 3:
+                            return "Normal";
+                        case 4:
+                            return "High";
+                        case 5:
+                            return "dangerous";
+                        default:
+                            return "No Degree";
+                    }
+                },]);
+
 
         CRUD::addColumn(['name' => 'count',
             'label' => "Reports Count", 'type' => 'closure', 'function' =>
@@ -103,6 +121,20 @@ class FireCrudController extends CrudController
                 1 => "New",
                 2 => "Confirmed",
                 3 => "End",
+            ]
+        ],);
+
+        CRUD::addField([   // select_and_order
+            'name' => 'den_degree',
+            'label' => "Degree of Danger",
+            'type' => 'select2_from_array',
+            'allows_null' => false,
+            'options' => [
+                1 => "Fake",
+                2 => "Low",
+                3 => "Normal",
+                4 => "High",
+                5 => "dangerous",
             ]
         ],);
 
@@ -182,7 +214,24 @@ class FireCrudController extends CrudController
             'tab' => "tab"]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree"]);
+        CRUD::addColumn(['name' => 'den_degree',
+            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    switch ($entry->den_degree) {
+                        case 1:
+                            return "Fake";
+                        case 2:
+                            return "Low";
+                        case 3:
+                            return "Normal";
+                        case 4:
+                            return "High";
+                        case 5:
+                            return "dangerous";
+                        default:
+                            return "No Degree";
+                    }
+                },]);
 
     }
 

@@ -239,7 +239,8 @@ class UserApiController extends BaseApiController
 
                     if (isset($user->fcm_token)) {
                         try {
-                            $user->notify(new FireNearUser('fire_near_user'));
+                            $fire_id =$result['fire']['id'] ;
+                            $user->notify(new FireNearUser('fire_near_user' , $fire_id));
                         } catch (NotFound $e) {
                             // $token is not registered to the project (any more)
                             // Handle the token (e.g. delete it in a local database)
