@@ -38,22 +38,7 @@ class CameraApiController extends BaseApiController
         $lat = $currentCamera->lat_lang->lat;
         $lng = $currentCamera->lat_lang->lng;
 
-        $query = Fire::query()->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
-            ->where('status', '=', 2)->first();
-
-        if ($query == null) {
-            $fire = new Fire();
-            $fire->lat_lang = $currentCamera->lat_lang;
-            $fire->status = 2;
-            $fire->den_degree = $degree;
-            $fire->save();
-            $report->fire_id = $fire->id;
-            $report->save();
-        } else {
-            $report->fire_id = $query->id;
-            $report->save();
-        }
-
+        $this->fireNearMe($report, $lat, $lng);
 
         return $this->sendJsonResponse();
 

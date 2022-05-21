@@ -14,10 +14,10 @@
             </div>
 
 </span>
-@if($entry->location)
+@if($entry->lat_lang)
 
     @push('after_scripts')
-        @if( isset($entry->location) )
+        @if( isset($entry->lat_lang) )
             <script>
                 function initMap() {
                     // The location of Uluru

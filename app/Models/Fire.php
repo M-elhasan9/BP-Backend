@@ -9,7 +9,7 @@ use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Fire extends Model
 {
-    use CrudTrait,HasFactory;
+    use CrudTrait, HasFactory;
 
     /*
     |--------------------------------------------------------------------------
@@ -21,8 +21,8 @@ class Fire extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $casts =[
-        'lat_lang'=>"object",
+    protected $casts = [
+        'lat_lang' => "object",
     ];
 
     // protected $fillable = [];
@@ -34,6 +34,11 @@ class Fire extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function sendNotify($crud = false)
+    {
+
+        return '<a class="btn btn-sm btn-link" target="_blank" href="#" data-toggle="tooltip"  title="notify custom button."><i class="la la-bell"></i> Send Notify</a>';
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -41,8 +46,9 @@ class Fire extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function reports(){
-        return $this->hasMany(Report::class,'fire_id');
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'fire_id');
     }
     /*
     |--------------------------------------------------------------------------

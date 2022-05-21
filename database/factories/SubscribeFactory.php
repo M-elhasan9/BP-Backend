@@ -17,7 +17,7 @@ class SubscribeFactory extends Factory
         return [
             'user_id'=>$this->faker->numberBetween(2,10),
             'description'=>$this->faker->text(20),
-            'lat_lang' => json_decode('{"lat": "36.235630", "lang": "37.115824"}'),
+            'lat_lang' => json_decode('{"lat": "36.235630", "lng": "37.115824"}'),
         ];
     }
 }

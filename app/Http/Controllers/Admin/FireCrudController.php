@@ -33,6 +33,7 @@ class FireCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/fire');
         CRUD::setEntityNameStrings('fire', 'fires');
         $this->crud->enableExportButtons();
+        $this->crud->set('show.setFromDb', false);
         $this->crud->denyAccess('create');
         $this->crud->denyAccess('delete');
     }
@@ -47,18 +48,10 @@ class FireCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
+
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
-        CRUD::addColumn([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng_map',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
+
         CRUD::addColumn(['name' => 'status',
             'label' => "Status", 'type' => 'closure', 'function' =>
                 function ($entry) {
@@ -75,7 +68,31 @@ class FireCrudController extends CrudController
                 },]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
+        CRUD::addColumn(['name' => 'den_degree',
+            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    switch ($entry->den_degree) {
+                        case 1:
+                            return "Fake";
+                        case 2:
+                            return "Low";
+                        case 3:
+                            return "Normal";
+                        case 4:
+                            return "High";
+                        case 5:
+                            return "dangerous";
+                        default:
+                            return "No Degree";
+                    }
+                },]);
+
+
+        CRUD::addColumn(['name' => 'count',
+            'label' => "Reports Count", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    return Report::query()->where('fire_id', '=', $entry->id)->count();
+                },]);
 
 
         /**
@@ -107,6 +124,20 @@ class FireCrudController extends CrudController
             ]
         ],);
 
+        CRUD::addField([   // select_and_order
+            'name' => 'den_degree',
+            'label' => "Degree of Danger",
+            'type' => 'select2_from_array',
+            'allows_null' => false,
+            'options' => [
+                1 => "Fake",
+                2 => "Low",
+                3 => "Normal",
+                4 => "High",
+                5 => "dangerous",
+            ]
+        ],);
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -123,19 +154,9 @@ class FireCrudController extends CrudController
      */
     protected function setupShowOperation()
     {
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "sendNotify", "beginning");
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
-        CRUD::addColumn([
-            'name' => 'lat_lang',
-            'label' => "Location",
-            'type' => 'latlng_map',
-            'google_api_key' => config('services.google_places.key'),
-            'map_style' => 'height: 300px; width:auto',
-            'default_zoom' => 17,
-            'geolocate_icon' => 'fa-crosshairs',
-            "attr" => "lat_lang",
-            'marker_icon' => null
-        ]);
         CRUD::addColumn(['name' => 'status',
             'label' => "Status", 'type' => 'closure', 'function' =>
                 function ($entry) {
@@ -151,15 +172,21 @@ class FireCrudController extends CrudController
                     }
                 },]);
 
+        CRUD::addColumn(['name' => 'lat_lang', 'type' => 'latlng_map', "label" => "Location"]);
+
+        CRUD::addColumn(['name' => 'count',
+            'label' => "Reports Count", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    return Report::query()->where('fire_id', '=', $entry->id)->count();
+                },]);
+
         $this->crud->addColumn([
             'name' => 'reports',
             'type' => 'datatable_view',
             'titles' => [
                 'Created at', 'Description', 'Degree', 'Reporter Type'
             ],
-
             'columns' => [
-
                 [
                     'name' => 'created_at',
                     'type' => 'link',
@@ -187,7 +214,24 @@ class FireCrudController extends CrudController
             'tab' => "tab"]);
 
 
-        CRUD::addColumn(['name' => 'den_degree', 'type' => 'text', 'label' => "Degree of Danger"]);
+        CRUD::addColumn(['name' => 'den_degree',
+            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
+                function ($entry) {
+                    switch ($entry->den_degree) {
+                        case 1:
+                            return "Fake";
+                        case 2:
+                            return "Low";
+                        case 3:
+                            return "Normal";
+                        case 4:
+                            return "High";
+                        case 5:
+                            return "dangerous";
+                        default:
+                            return "No Degree";
+                    }
+                },]);
 
     }
 
