@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Fire extends Model
@@ -37,7 +38,11 @@ class Fire extends Model
     public function sendNotify($crud = false)
     {
 
-        return '<a class="btn btn-sm btn-link" target="_blank" href="#" data-toggle="tooltip"  title="notify custom button."><i class="la la-bell"></i> Send Notify</a>';
+            $btn =  "<button class='btn btn-danger btn-sm '>
+                        <a class='nav-link p-0' style='color: #fff' href='/admin/sendFireNotifyToNearbyUser/$this->id'>Send Notify</a>
+                    </button>";
+        return "<span class='mx-5' style='width: 50px;display: inline-block'>$btn</span>";
+
     }
 
     /*

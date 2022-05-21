@@ -93,7 +93,7 @@ class ReportsCrudController extends CrudController
 
         CRUD::column('fire_id')->lable("Fire ID")
             ->type('select')
-            ->entity('fires')
+            ->entity('fire')
             ->attribute('id')
             ->model(Fire::class)
             ->wrapper([
@@ -101,8 +101,6 @@ class ReportsCrudController extends CrudController
                     return backpack_url('fire/'.$related_key.'/show');
                 },
             ]);
-
-
 
 
         CRUD::addColumn([

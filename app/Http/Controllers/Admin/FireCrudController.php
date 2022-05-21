@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\FireRequest;
 use App\Models\Camera;
+use App\Models\Fire;
 use App\Models\Report;
+use App\Models\Subscribe;
 use App\Models\User;
+use App\Ntfs\FireNearUser;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Notification;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class FireCrudController
@@ -49,6 +54,7 @@ class FireCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
+
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
 
@@ -239,5 +245,24 @@ class FireCrudController extends CrudController
     {
         $data = Report::query()->where('fire_id', $id)->get();
         return datatables()->of($data)->toJson();
+    }
+
+    public function sendFireNotificationToNearbyUsers($fireId)
+    {
+        $fire = Fire::query()->findOrFail($fireId);
+        $lat = $fire->lat_lang->lat;
+        $lng = $fire->lat_lang->lng;
+
+        $nearByUsersIds = Subscribe::query()
+            ->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
+            ->pluck('user_id')
+            ->toArray();
+
+        $nearByUsers = User::query()->whereIn('id', $nearByUsersIds)->get();
+
+        Notification::send($nearByUsers, new FireNearUser('fire_near_user', $fire->id));
+
+        Alert::success("Alert Sent")->flash();
+        return redirect($this->crud->route);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Ntfs;
 
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
@@ -17,6 +18,7 @@ class FireNearUser extends Notification
 
     var $type;
     var $fire_id ;
+    use Queueable;
 
     public function __construct($type ,$fire_id )
     {
@@ -34,7 +36,7 @@ class FireNearUser extends Notification
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
-            ->setData([  'fire_id' => $this->fire_id , 'type' => $this->type, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'])
+            ->setData([  'fire_id' =>  (String)  $this->fire_id , 'type' => $this->type, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Fire alarm')
                 ->setBody('A fire near one of your saved places'));

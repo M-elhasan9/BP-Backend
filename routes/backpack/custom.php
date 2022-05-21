@@ -22,6 +22,7 @@ Route::group([
     Route::crud('subscribes', 'SubscribesCrudController');
     Route::crud('cameras', 'CamerasCrudController');
     Route::get("reports/{id}", "FireCrudController@getReport");
+    Route::get("sendFireNotifyToNearbyUser/{fireId}", "FireCrudController@sendFireNotificationToNearbyUsers");
 
     Route::crud('fire', 'FireCrudController');
 }); // this should be the absolute last line of this file

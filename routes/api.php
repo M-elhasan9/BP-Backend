@@ -42,7 +42,7 @@ Route::group(['middleware' => [\App\Http\Middleware\AlwaysReturnJSON::class]], f
         Route::delete('user/deleteUserSubscribe/{id}', [UserApiController::class, 'deleteUserSubscribe']);
 
         Route::get('user/getSubscribes', [UserApiController::class, 'getSubscribes']);
-        Route::get('user/getConfirmedReports', [UserApiController::class, 'getConfirmedReports']);
+        Route::get('user/getActiveFires', [UserApiController::class, 'getActiveFires']);
         Route::get('user/getFiresNearMe', [UserApiController::class, 'getFiresNearMe']);
 
     });
