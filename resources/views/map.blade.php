@@ -68,7 +68,8 @@
                 document.getElementsByClassName("labels-layer")[0].style['display'] = "block"
                 //windy.style['opacity'] = "0.5"
                 map.options.maxZoom = 11;
-                map.setZoom(11)
+                if (map.getZoom() > 11)
+                    map.setZoom(11)
                 if (r.value == "Temp")
                     store.set("overlay", "temp")
                 else
