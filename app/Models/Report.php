@@ -21,8 +21,8 @@ class Report extends Model
     protected $table = 'reports';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    protected $casts =[
-        'lat_lang'=>"object",
+    protected $casts = [
+        'lat_lang' => "object",
     ];
     protected $fillable = [
         'id',
@@ -58,9 +58,9 @@ class Report extends Model
         return $this->fire;
     }
 
-    public function fires()
+    public function fire()
     {
-        return $this->belongsTo(Fire::class,'fire_id');
+        return $this->belongsTo(Fire::class);
     }
     /*
     |--------------------------------------------------------------------------

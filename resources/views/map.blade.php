@@ -2,6 +2,7 @@
 
 
 <link rel="stylesheet" href="{{asset('css/app.css')}}">
+<script src="{{asset('js/app.js')}}"></script>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
@@ -12,33 +13,31 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview/dist/L.Control.ResetView.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@drustack/leaflet.resetview/dist/L.Control.ResetView.min.js"></script>
 
-<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"/>
 <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
 
 <link rel="stylesheet" href="<?php echo url('css/fullscreen.css')?>"/>
 <script src="<?php echo url('js/fullscreen.js')?>"></script>
 
-<link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
+<link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css"/>
 <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
 <script src="<?php echo url('js/leaflet.browser.print.min.js')?>"></script>
 
 <link rel="stylesheet" href="<?php echo url('css/Leaflet-Coordinates-Control.css')?>"/>
 <script src="<?php echo url('js/Leaflet-Coordinates-Control.js')?>"></script>
+
+
+<script src="<?php echo url('js/L.Realtime.js')?>"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
 @section('content')
-    <div class="row">
-        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="without">
-        <label for="html">بدون طقس</label><br>
-        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="wind">
-        <label for="css">حركة الرياح</label><br>
-        <input onclick="windyOnclick(this)" type="radio" name="windyRadio" value="temp">
-        <label for="javascript">الحرارة</label>
-    </div>
 
-
-
-    <div id="windy" style="width: 100%; height: 90%;"></div>
-
+    <div id="windy" style="width: 100%; height: 100%;"></div>
     <style>
         #map-container {
             z-index: 0;
@@ -48,12 +47,12 @@
     <script>
         var windy;
         var store;
+        var map;
 
         function hideWindyElements() {
             document.getElementById("bottom").style['display'] = "none"
             document.getElementsByClassName("basemap-layer")[0].style['display'] = "none"
             document.getElementsByClassName("labels-layer")[0].style['display'] = "none"
-
             document.getElementById("logo-wrapper").style['display'] = "none"
             document.getElementById("embed-zoom").style['display'] = "none"
             document.getElementById("mobile-ovr-select").style['display'] = "none"
@@ -61,18 +60,22 @@
                 windy.style['display'] = "none"
         }
 
-        function windyOnclick(r) {
-            if (r.value == "wind" || r.value == "temp") {
+        function MapWeatherTypeOnclick(r) {
+            if (r.value == "Wind" || r.value == "Temp") {
                 windy.style['display'] = "block"
                 document.getElementById("bottom").style['display'] = "block"
                 document.getElementsByClassName("basemap-layer")[0].style['display'] = "block"
                 document.getElementsByClassName("labels-layer")[0].style['display'] = "block"
                 //windy.style['opacity'] = "0.5"
-                if (r.value == "temp")
+                map.options.maxZoom = 11;
+                if (map.getZoom() > 11)
+                    map.setZoom(11)
+                if (r.value == "Temp")
                     store.set("overlay", "temp")
                 else
                     store.set("overlay", "wind")
             } else {
+                map.options.maxZoom = 18;
                 hideWindyElements();
             }
         }
@@ -102,7 +105,6 @@
         const options = {
             // Required: API key
             key: 'r16ylTSzt123Cjht7eKgaRvIn1gVLolu', // REPLACE WITH YOUR KEY !!!
-
             // Optional: Initial state of the map
             lat: 39.24,
             lon: 35.19,
@@ -116,150 +118,205 @@
             // 'picker' and other usefull stuff
 
             const {map, store} = windyAPI;
-            // .map is instance of Leaflet map
             this.store = store
-            var littleton = L.marker([38.0305851, 33.6290171]).bindPopup('This is Littleton, CO.'),
-                denver = L.marker([38.0205851, 33.6390171]).bindPopup('This is Denver, CO.'),
-                aurora = L.marker([38.0405851, 33.6490171]).bindPopup('This is Aurora, CO.'),
-                golden = L.marker([38.0505851, 33.6590171]).bindPopup('This is Golden, CO.');
-
-            var cities = L.layerGroup([littleton, denver, aurora, golden]);
-
-            var crownHill = L.marker([38.1205851, 33.6390171]).bindPopup('This is Crown Hill Park.'),
-                rubyHill = L.marker([38.1305851, 33.6390171]).bindPopup('This is Ruby Hill Park.');
-
-            var parks = L.layerGroup([crownHill, rubyHill]);
-
-            var myLayer1 = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            var myLayer2 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-
-            const Map_BaseLayer = {'خريطة التضاريس': myLayer1, 'الخريطة الافتراضية': myLayer2};
-
-            const Map_AddLayer = {
-                'الحرائق الجديدة': parks,
-                'الحرائق الفعلية': parks,
-                'الحرائق المنتهية': parks,
-                'تقارير الأشخص': cities,
-            };
-
-            L.control
-                .layers(Map_BaseLayer, Map_AddLayer, {
-                    collapsed: false,
-                })
-                .addTo(map);
-
-            var marker = L.marker([38.0105851, 33.6190171]).addTo(map);
-
-            L.marker([38.0105851, 33.6190171], {
-                icon: L.icon({
-                    iconUrl: 'https://server.yesilkalacak.com/images/fire.png',
-                    iconSize: [30, 30], // size of the icon
-                    iconAnchor: [10, 10], // point of the icon which will correspond to marker's location
-                    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-                })
-            }).addTo(map).bindPopup("I am a green leaf.");
-
-            var circle = L.circle([38.0105851, 30.6190171], {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 500
-            }).addTo(map);
-
-            var polygon = L.polygon([
-                [37.21489152908325, 28.05506145183324,],
-                [36.41577129364014, 29.352586015356876],
-                [37.016543769836426, 29.5539867694403]
-            ]).addTo(map);
-
-            json = {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [[
-                                [28.05506145183324, 37.21489152908325,],
-                                [29.352586015356876, 36.41577129364014],
-                                [29.5539867694403, 37.016543769836426]
-                            ]]
-                        },
-                        "style": {
-                            "color": "#CC0000",
-                            "weight": 2,
-                            "fill-opacity": 0.6,
-                            "opacity": 1,
-                            "dashArray": "3, 5"
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "MultiLineString",
-                            "coordinates": [[[37.611907, 55.747355], [37.612639, 55.747611], [37.613671, 55.747839], [37.614446, 55.748040], [37.616002, 55.748446], [37.616364, 55.748537], [37.616573, 55.748585], [37.616779, 55.748627], [37.617038, 55.748677], [37.618375, 55.748887], [37.620201, 55.749173], [37.620494, 55.749215], [37.620723, 55.749246], [37.621209, 55.749296], [37.622037, 55.749388], [37.622402, 55.749421], [37.622745, 55.749461], [37.622990, 55.749484], [37.623206, 55.749507], [37.623680, 55.749562], [37.624266, 55.749640]], [[37.624245, 55.749770], [37.623771, 55.749678], [37.623476, 55.749623], [37.623147, 55.749577], [37.621484, 55.749414], [37.620021, 55.749222], [37.618740, 55.749021], [37.617359, 55.748819], [37.616927, 55.748750], [37.616755, 55.748721], [37.616592, 55.748691], [37.616413, 55.748652], [37.616225, 55.748608], [37.614894, 55.748251], [37.614139, 55.748055], [37.613795, 55.747971], [37.613487, 55.747906], [37.612526, 55.747741], [37.612248, 55.747656], [37.611791, 55.747497]]]
-                        },
-                        "style": {
-                            "color": "#CC0000",
-                            "opacity": 1,
-                            "weight": 4
-                        }
-                    },
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [28.3555422, 37.2101562]
-                        },
-                        "style": {
-                            "icon": {
-                                "iconUrl": "http://server.yesilkalacak.com/images/fire.png",
-                                "iconSize": [50, 50],
-                                "iconAnchor": [10, 10]
-                            }
-                        }
-                    },
-
-                ]
-            }
-
-            L.geoJson.css(json).addTo(map);
-
-            var popup = L.popup();
-
-            function onMapClick(e) {
-                popup
-                    .setLatLng(e.latlng)
-                    .setContent("You clicked the map at " + e.latlng.toString())
-                    .openOn(map);
-            }
-
-           // map.on('click', onMapClick);
-
-
-            var imageUrl = 'https://server.yesilkalacak.com/storage/fires/f%20(45).jpgRES.jpg';
-            var altText = 'detect by AI';
-            var latLngBounds = L.latLngBounds([[37.0105851, 33.6190171], [37.1105851, 33.7190171]]);
-
-            var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
-                opacity: 0.8,
-                alt: altText,
-                interactive: true
-            }).addTo(map);
-
+            this.map = map
             document.getElementsByClassName("leaflet-control-container")[0].style['display'] = "block"
-
             hideWindyElements();
-            var t = setInterval(function () {
+            setInterval(function () {
                 if (document.getElementsByClassName("overlay-layer") && windy == null) {
                     windy = document.getElementsByClassName("overlay-layer")[0];
                     windy.style['display'] = "none"
                 }
             }, 10);
+            map.options.maxZoom = 18;
+
+            // .map is instance of Leaflet map
+
+            // Wind Heat Map buttons
+            var typeButton = L.Control.extend({
+                options: {
+                    position: 'topright'
+                },
+                onAdd: function (map) {
+                    var div = L.DomUtil.create('div', "leaflet-control-layers leaflet-control-layers-expanded");
+                    var b1 = L.DomUtil.create('input');
+                    b1.type = "button";
+                    b1.value = "Wind";
+                    b1.onclick = function () {
+                        MapWeatherTypeOnclick(this)
+                    }
+                    var b2 = L.DomUtil.create('input');
+                    b2.type = "button";
+                    b2.value = "Temp";
+                    b2.onclick = function () {
+                        MapWeatherTypeOnclick(this)
+                    }
+                    var b3 = L.DomUtil.create('input');
+                    b3.type = "button";
+                    b3.value = "Map";
+                    b3.onclick = function () {
+                        MapWeatherTypeOnclick(this)
+                    }
+                    div.append(b1)
+                    div.append(b2)
+                    div.append(b3)
+                    return div;
+                }
+            })
+            map.addControl(new typeButton());
+
+            var TerrainLayer = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            var DefaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+
+            var actualFireIcon = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire.png',
+                iconSize: [80, 80], // size of the icon
+                iconAnchor: [35, 60], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var actualFireIconSmall = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire.png',
+                iconSize: [40, 40], // size of the icon
+                iconAnchor: [17, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var newFireIcon = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire-black.png',
+                iconSize: [60, 80], // size of the icon
+                iconAnchor: [30, 60], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var newFireIconSmall = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire-black.png',
+                iconSize: [30, 40], // size of the icon
+                iconAnchor: [15, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var endFireIcon = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire-green.png',
+                iconSize: [60, 80], // size of the icon
+                iconAnchor: [30, 60], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var endFireIconSmall = L.icon({
+                iconUrl: 'https://server.yesilkalacak.com/images/fire-green.png',
+                iconSize: [30, 40], // size of the icon
+                iconAnchor: [15, 30], // point of the icon which will correspond to marker's location
+                popupAnchor: [-10, -10] // point from which the popup should open relative to the iconAnchor
+            })
+            var bigIcon = false
+            map.on('zoomend', function () {
+                var currentZoom = map.getZoom();
+                newFireIcon.iconSize = [20, 20]
+
+                if (currentZoom < 12 && bigIcon || currentZoom >= 12 && !bigIcon) {
+                    bigIcon = !bigIcon;
+                    newFiresLayer.eachLayer(function (layer) {
+                        if (currentZoom >= 12)
+                            return layer.setIcon(newFireIcon);
+                        else
+                            return layer.setIcon(newFireIconSmall);
+                    });
+                    actualFiresLayer.eachLayer(function (layer) {
+                        if (currentZoom >= 12)
+                            return layer.setIcon(actualFireIcon);
+                        else
+                            return layer.setIcon(actualFireIconSmall);
+                    });
+                    endFiresLayer.eachLayer(function (layer) {
+                        if (currentZoom >= 12)
+                            return layer.setIcon(endFireIcon);
+                        else
+                            return layer.setIcon(endFireIconSmall);
+                    });
+                }
+
+            });
+
+            var newFires = [];
+            var actualFires = [];
+            var reports = [];
+            var endFires = [];
+            @foreach( \App\Models\Fire::all() as $fire)
+            var status = {{$fire->status}};
+            if (status === 1)
+                newFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: newFireIconSmall}).bindPopup(
+                    "Status :{{$fire->status}} - Degree: {{$fire->den_degree}} - Created at: {{$fire->created_at}} - <a href=\"{{url('/admin/fire/'.$fire->id.'/show')}}\"> Link <\a>"));
+            else if (status === 2)
+                actualFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: actualFireIconSmall}).bindPopup('This is Crown Hill Park.'))
+            else if (status === 3)
+                endFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: endFireIconSmall}).bindPopup('This is Crown Hill Park.'))
+            @endforeach
+
+            @php
+                $Reports = \App\Models\Report::all()
+            @endphp
+            @foreach($Reports as $report)
+            reports.push(L.marker([{{$report->lat_lang->lat}}, {{$report->lat_lang->lng}}]).bindPopup(
+                "Reported From:{{$report->reporter_type}} - Degree: {{$report->den_degree}} - Reported at: {{$report->created_at}} - <a href=\"{{url('/admin/reports/'.$report->id.'/show')}}\"> Link <\a> <img style=\"width:200px\" src=\"https://server.yesilkalacak.com/storage/fires/f%20(45).jpgRES.jpg\"><\img>"))
+            @endforeach
+
+            var newFiresLayer = L.layerGroup(newFires)
+            var actualFiresLayer = L.layerGroup(actualFires)
+            var endFiresLayer = L.layerGroup(endFires)
+            var reportsLayer = L.layerGroup(reports)
+
+            var reportsMarkers = L.markerClusterGroup();
+            for (var i = 0; i < reports.length; i++) {
+                reportsMarkers.addLayer(reports[i]);
+            }
+            //map.addLayer(reportsMarkers);
+            map.addLayer(newFiresLayer)
+            map.addLayer(actualFiresLayer)
+            var layerControl = L.control
+                .layers(
+                    {
+                        'Terrain Map': TerrainLayer,
+                        'Default Map': DefaultLayer,
+                    },
+                    {
+                        'New fires': newFiresLayer,
+                        'Actual fires': actualFiresLayer,
+                        'End fires': endFiresLayer,
+                        'Reports': reportsMarkers,
+                    },
+                    {
+                        collapsed: false,
+                    })
+                .addTo(map);
+
+            map.pm.addControls({
+                position: 'topleft',
+                drawCircle: true,
+            });
+
+            map.pm.Toolbar.createCustomControl({
+                name: 'SaveButton',
+                block: 'draw',
+                className: 'control-icon leaflet-pm-icon-snapping',
+                actions: [{
+                    text: 'Save',
+                    onClick: function () {
+                        localStorage.setItem('markers', JSON.stringify(map.pm.getGeomanDrawLayers(true).toGeoJSON()));
+                        alert("save done .")
+                    }
+                }]
+            })
+
+            var markers = localStorage.getItem("markers");
+            if (markers) {
+                markers = JSON.parse(markers);
+                var layer = L.geoJson.css(markers);
+                layer.pm._layers.forEach(function (e) {
+                    e._drawnByGeoman = true
+                })
+                layer.addTo(map)
+            }
 
             // create a fullscreen button and add it to the map
             L.control.fullscreen({
@@ -278,26 +335,30 @@
                 latlng: L.latLng([39.24, 35.19]),
                 zoom: 6,
             }).addTo(map);
+
             if (!map.restoreView()) {
                 map.setView([39.24, 35.19], 6);
             }
-            map.pm.addControls({
-                position: 'topleft',
-                drawCircle: false,
+
+            L.control.polylineMeasure({"showClearControl": true}).addTo(map);
+            L.control.browserPrint({position: 'topleft', title: 'Print ...'}).addTo(map);
+
+            var realtime = L.realtime({
+                url: '{{url("api/mapPoints")}}',
+                crossOrigin: true,
+                type: 'json'
+            }, {
+                interval: 1000000 * 3
+            }).addTo(map);
+
+            realtime.on('update', function () {
+                map.fitBounds(realtime.getBounds(), {maxZoom: 3});
             });
 
-            var c = new L.Control.Coordinates();
-            c.addTo(map);
-            map.on('click', function(e) {
-                c.setCoordinates(e);
-            });
-            L.control.polylineMeasure({"showClearControl":true}).addTo(map);
-            L.control.browserPrint({position: 'topleft', title: 'Print ...'}).addTo(map);
 
         });
 
-
-        (function() {
+        (function () {
             var RestoreViewMixin = {
                 restoreView: function () {
                     if (!storageAvailable('localStorage')) {
@@ -324,8 +385,7 @@
                         view = JSON.parse(view || '');
                         this.setView(L.latLng(view.lat, view.lng), view.zoom, true);
                         return true;
-                    }
-                    catch (err) {
+                    } catch (err) {
                         return false;
                     }
                 }
@@ -338,8 +398,7 @@
                     storage.setItem(x, x);
                     storage.removeItem(x);
                     return true;
-                }
-                catch(e) {
+                } catch (e) {
                     console.warn("Your browser blocks access to " + type);
                     return false;
                 }
@@ -347,6 +406,50 @@
 
             L.Map.include(RestoreViewMixin);
         })();
+
+
+        /// Load markers
+        function loadMarkers() {
+            var markers = localStorage.getItem("markers");
+            if (!markers) return;
+            markers = JSON.parse(markers);
+            markers.features.forEach(function (entry) {
+                latlng = JSON.parse(entry);
+                var geojsonFeature = {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [latlng.lat, latlng.lng]
+                    }
+                }
+
+                var marker;
+
+                L.geoJson(geojsonFeature, {
+
+                    pointToLayer: function (feature) {
+
+                        marker = L.marker(latlng, {
+
+                            title: "Resource Location",
+                            alt: "Resource Location",
+                            riseOnHover: true,
+                            draggable: true,
+                            icon: redmarker
+
+
+                        }).bindPopup("<<span>X: " + latlng.lng + ", Y: " + latlng.lat + "</span><br><a href='#' id='marker-delete-button'>Delete marker</a>");
+
+                        marker.on("popupopen", onPopupOpen);
+
+                        return marker;
+                    }
+                }).addTo(map);
+            });
+        }
+
+
     </script>
 @endsection
 
