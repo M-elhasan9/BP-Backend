@@ -53,9 +53,7 @@ class FireCrudController extends CrudController
 
     protected function setupListOperation()
     {
-            $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
-
-
+        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
 
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
