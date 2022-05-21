@@ -246,11 +246,14 @@
             var status = {{$fire->status}};
             if (status === 1)
                 newFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: newFireIconSmall}).bindPopup(
-                    "Status :{{$fire->status}} - Degree: {{$fire->den_degree}} - Created at: {{$fire->created_at}} - <a href=\"{{url('/admin/fire/'.$fire->id.'/show')}}\"> Link <\a>"));
+                    "Degree: {{$fire->den_degree}} - Created at: {{$fire->created_at}} - <a href=\"{{url('/admin/fire/'.$fire->id.'/show')}}\"> Link <\a>"));
             else if (status === 2)
-                actualFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: actualFireIconSmall}).bindPopup('This is Crown Hill Park.'))
+                actualFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: actualFireIconSmall}).bindPopup(
+                    "Degree: {{$fire->den_degree}} - Created at: {{$fire->created_at}} - <a href=\"{{url('/admin/fire/'.$fire->id.'/show')}}\"> Link <\a>"
+                ))
             else if (status === 3)
-                endFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: endFireIconSmall}).bindPopup('This is Crown Hill Park.'))
+                endFires.push(L.marker([{{$fire->lat_lang->lat}}, {{$fire->lat_lang->lng}}], {icon: endFireIconSmall}).bindPopup(
+                    "Degree: {{$fire->den_degree}} - Created at: {{$fire->created_at}} - <a href=\"{{url('/admin/fire/'.$fire->id.'/show')}}\"> Link <\a>"));
             @endforeach
 
             @php
@@ -258,7 +261,7 @@
             @endphp
             @foreach($Reports as $report)
             reports.push(L.marker([{{$report->lat_lang->lat}}, {{$report->lat_lang->lng}}]).bindPopup(
-                "Reported From:{{$report->reporter_type}} - Degree: {{$report->den_degree}} - Reported at: {{$report->created_at}} - <a href=\"{{url('/admin/reports/'.$report->id.'/show')}}\"> Link <\a> <img style=\"width:200px\" src=\"https://server.yesilkalacak.com/storage/fires/f%20(45).jpgRES.jpg\"><\img>"))
+                "Reported From:{{$report->reporter_type}} - Degree: {{$report->den_degree}} - Reported at: {{$report->created_at}} - <a href=\"{{url('/admin/reports/'.$report->id.'/show')}}\"> Link <\a> <img style=\"width:200px\" src=\"{{url('/storage/'.$report->image)}}\"><\img>"))
             @endforeach
 
             var newFiresLayer = L.layerGroup(newFires)
