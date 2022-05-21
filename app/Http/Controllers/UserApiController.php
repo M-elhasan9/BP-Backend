@@ -129,17 +129,17 @@ class UserApiController extends BaseApiController
         $report->save();
         $report->refresh();
 
-        $response = Http::get('http://nn.yesilkalacak.com/check', [
-            'path' => $report->image,
-        ]);
-        $r = $response->json();
+//        $response = Http::get('http://nn.yesilkalacak.com/check', [
+//            'path' => $report->image,
+//        ]);
+//        $r = $response->json();
 
-        $report->nn_approval = $r['detect'];
-        $report->den_degree = $r['decree'];
+//        $report->nn_approval = $r['detect'];
+//        $report->den_degree = $r['decree'];
 
-        if ($r['detect']) {
-            $report->image = $report->image . "RES.jpg";
-        }
+//        if ($r['detect']) {
+//            $report->image = $report->image . "RES.jpg";
+//        }
 
         $report->save();
         $report->refresh();

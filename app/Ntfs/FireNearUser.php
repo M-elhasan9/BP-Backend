@@ -36,7 +36,7 @@ class FireNearUser extends Notification
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
-            ->setData([  'fire_id' => $this->fire_id , 'type' => $this->type, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'])
+            ->setData([  'fire_id' =>  (String)  $this->fire_id , 'type' => $this->type, 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Fire alarm')
                 ->setBody('A fire near one of your saved places'));

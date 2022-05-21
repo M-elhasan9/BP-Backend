@@ -53,7 +53,10 @@ class FireCrudController extends CrudController
 
     protected function setupListOperation()
     {
-        $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
+            $this->crud->addButtonFromModelFunction("line", "Send Notification", "SendNotify", "beginning");
+
+
+
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
 
@@ -249,17 +252,15 @@ class FireCrudController extends CrudController
     public function sendFireNotificationToNearbyUsers($fireId)
     {
         $fire = Fire::query()->findOrFail($fireId);
-        $lat = $fire['lat_lang']['lat'];
-        $lng = $fire['lat_lang']['lng'];
+        $lat = $fire->lat_lang->lat;
+        $lng = $fire->lat_lang->lng;
 
         $nearByUsersIds = Subscribe::query()
             ->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
             ->pluck('user_id')
             ->toArray();
 
-
         $nearByUsers = User::query()->whereIn('id', $nearByUsersIds)->get();
-
 
         Notification::send($nearByUsers, new FireNearUser('fire_near_user', $fire->id));
 

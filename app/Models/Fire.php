@@ -37,9 +37,6 @@ class Fire extends Model
     */
     public function sendNotify($crud = false)
     {
-        $fire = Fire::query()->where('id','=',$this->id)->first();
-
-
 
             $btn =  "<button class='btn btn-danger btn-sm '>
                         <a class='nav-link p-0' style='color: #fff' href='/admin/sendFireNotifyToNearbyUser/$this->id'>Send Notify</a>
