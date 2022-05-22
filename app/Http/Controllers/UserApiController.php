@@ -133,7 +133,7 @@ class UserApiController extends BaseApiController
             'path' => $report->image,
         ]);
         $r = $response->json();
-        return $this->sendJsonResponse($r->toArray());
+        return $this->sendJsonResponse($r);
 
         if(isset($r)) {
             $report->nn_approval = $r['detect'];
