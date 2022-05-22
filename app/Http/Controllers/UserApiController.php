@@ -124,16 +124,13 @@ class UserApiController extends BaseApiController
 
         $report->description = $description;
         $report->lat_lang = ['lat' => $lat, 'lng' => $lang];
-        $report->image = $this->storeImage();
 
-        $report->save();
-        $report->refresh();
+        $storedImagePath= $this->storeImage();
 
         $response = Http::get('http://nn.yesilkalacak.com/check', [
-            'path' => $report->image,
+            'path' => $storedImagePath,
         ]);
         $r = $response->json();
-
 
         if (isset($r['error'])) {
             return $this->sendError($r['error'], 422);
@@ -142,7 +139,6 @@ class UserApiController extends BaseApiController
             $report->den_degree = $r['decree'];
             $report->image = $report->image . "RES.jpg";
         }
-
 
         $report->save();
         $report->refresh();
