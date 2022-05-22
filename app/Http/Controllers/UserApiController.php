@@ -133,13 +133,17 @@ class UserApiController extends BaseApiController
             'path' => $report->image,
         ]);
         $r = $response->json();
-        return $this->sendJsonResponse($r);
 
-        if(isset($r)) {
-            $report->nn_approval = $r['detect'];
-            $report->den_degree = $r['decree'];
+
+        $data = $r['data'];
+        if (isset($data['error'])) {
+            return $this->sendError($data['error'], 422);
+        } else {
+            $report->nn_approval = $data['detect'];
+            $report->den_degree = $data['decree'];
             $report->image = $report->image . "RES.jpg";
         }
+
 
         $report->save();
         $report->refresh();
@@ -239,8 +243,8 @@ class UserApiController extends BaseApiController
 
                     if (isset($user->fcm_token)) {
                         try {
-                            $fire_id =$result['fire']['id'] ;
-                            $user->notify(new FireNearUser('fire_near_user' , $fire_id));
+                            $fire_id = $result['fire']['id'];
+                            $user->notify(new FireNearUser('fire_near_user', $fire_id));
                         } catch (NotFound $e) {
                             // $token is not registered to the project (any more)
                             // Handle the token (e.g. delete it in a local database)
