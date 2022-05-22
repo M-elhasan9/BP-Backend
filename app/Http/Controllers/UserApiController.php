@@ -135,12 +135,11 @@ class UserApiController extends BaseApiController
         $r = $response->json();
 
 
-        $data = $r['data'];
-        if (isset($data['error'])) {
-            return $this->sendError($data['error'], 422);
+        if (isset($r['error'])) {
+            return $this->sendError($r['error'], 422);
         } else {
-            $report->nn_approval = $data['detect'];
-            $report->den_degree = $data['decree'];
+            $report->nn_approval = $r['detect'];
+            $report->den_degree = $r['decree'];
             $report->image = $report->image . "RES.jpg";
         }
 
