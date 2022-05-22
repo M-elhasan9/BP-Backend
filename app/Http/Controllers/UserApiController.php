@@ -137,7 +137,7 @@ class UserApiController extends BaseApiController
         } else {
             $report->nn_approval = $r['detect'];
             $report->den_degree = $r['decree'];
-            $report->image = $report->image . "RES.jpg";
+            $report->image = $storedImagePath. "RES.jpg";
         }
 
         $report->save();
