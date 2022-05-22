@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
+use Prologue\Alerts\Facades\Alert;
 
 abstract class BaseApiController extends Controller
 {
@@ -24,6 +25,7 @@ abstract class BaseApiController extends Controller
            // $fire->den_degree = $report->den_degree;
             $fire->save();
             $report->fire_id = $fire->id;
+            Alert::error('New Fire')->flash();
         } else {
             $report->fire_id = $query->id;
         }
