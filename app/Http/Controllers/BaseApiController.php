@@ -17,15 +17,16 @@ abstract class BaseApiController extends Controller
     public function fireNearMe($report, $lat, $lng)
     {
         $query = Fire::query()->whereRaw("ST_Distance_Sphere( point(JSON_EXTRACT(lat_lang, '$.lng'),JSON_EXTRACT(lat_lang, '$.lat')), point($lng,$lat) )<1000")
-            ->where('status', '=', 2)->first();
+            ->where('status', '!=', 3)->first();
 
         if ($query == null) {
             $fire = new Fire();
             $fire->lat_lang = $report->lat_lang;
+            $fire->status = 1;
            // $fire->den_degree = $report->den_degree;
             $fire->save();
             $report->fire_id = $fire->id;
-            Alert::success("Alert Sent")->flash();
+            Alert::error("New Fire")->flash();
         } else {
             $report->fire_id = $query->id;
         }

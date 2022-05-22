@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(UserSeeder::class);
+        $this->call(Camera::class);
        //Camera::factory(5)->create();
         //Report::factory(10)->create();
         //Fire::factory(3)->create();
