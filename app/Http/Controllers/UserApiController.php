@@ -135,8 +135,13 @@ class UserApiController extends BaseApiController
         if (isset($r['error'])) {
             return $this->sendError($r['error'], 422);
         } else {
+            if (isset($r['detect'])&&isset($r['decree'])){
             $report->nn_approval = $r['detect'];
             $report->den_degree = $r['decree'];
+            }else{
+                $report->nn_approval = false;
+                $report->den_degree = false;
+            }
             $report->image = $storedImagePath. "RES.jpg";
         }
 

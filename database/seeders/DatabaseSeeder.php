@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UserSeeder::class);
         $this->call(CameraSeeder::class);
-       //Camera::factory(5)->create();
         //Report::factory(10)->create();
         //Fire::factory(3)->create();
         //Subscribe::factory(10)->create();

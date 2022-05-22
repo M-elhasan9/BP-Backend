@@ -97,6 +97,10 @@ class FireCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
+//    public function alert(){
+//        Alert::error('New Fire')->flash();
+//    }
+
     protected function setupUpdateOperation()
     {
         CRUD::setValidation(FireRequest::class);

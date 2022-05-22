@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\FireCrudController;
 use App\Models\Fire;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -26,7 +27,7 @@ abstract class BaseApiController extends Controller
            // $fire->den_degree = $report->den_degree;
             $fire->save();
             $report->fire_id = $fire->id;
-            Alert::error("New Fire")->flash();
+           // (new Admin\FireCrudController)->alert();
         } else {
             $report->fire_id = $query->id;
         }
