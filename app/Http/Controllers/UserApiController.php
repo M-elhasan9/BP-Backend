@@ -134,8 +134,8 @@ class UserApiController extends BaseApiController
         ]);
         $r = $response->json();
 
-        $report->nn_approval = $r['detect'];
-        $report->den_degree = $r['decree'];
+        $report->nn_approval = $r->detect;
+        $report->den_degree = $r->decree;
 
         if ($r['detect']) {
             $report->image = $report->image . "RES.jpg";
@@ -239,8 +239,8 @@ class UserApiController extends BaseApiController
 
                     if (isset($user->fcm_token)) {
                         try {
-                            $fire_id =$result['fire']['id'] ;
-                            $user->notify(new FireNearUser('fire_near_user' , $fire_id));
+                            $fire_id = $result['fire']['id'];
+                            $user->notify(new FireNearUser('fire_near_user', $fire_id));
                         } catch (NotFound $e) {
                             // $token is not registered to the project (any more)
                             // Handle the token (e.g. delete it in a local database)

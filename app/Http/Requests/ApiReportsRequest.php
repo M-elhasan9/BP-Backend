@@ -26,7 +26,6 @@ class ApiReportsRequest extends FormRequest
     public function rules()
     {
         return [
-             'description' => 'required',
              'lat' => 'required',
              'lng' => 'required',
              'image' => 'nullable',

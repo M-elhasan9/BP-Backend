@@ -78,30 +78,30 @@ class ReportsCrudController extends CrudController
         ]);
         CRUD::addColumn(['name' => 'description', 'type' => 'text', 'label' => "Description"]);
 
-//        CRUD::addColumn(['name' => 'fire',
-//            'type' => 'select',
-//            'entity' => 'fire',
-//            'attribute' => 'id',
-//            'model' => Fire::class,
-//            'wrapper' => [
-//                'href' => function ($crud, $column, $entry, $related_key) {
-//                    return backpack_url('fire/'.$related_key.'/show');
-//                },
-//            ],
-//            'label' => "Fire ID"]);
-
-
-        CRUD::column('fire_id')
-            ->lable("Fire ID")
-            ->type('select')
-            ->entity('fire')
-            ->attribute('id')
-            ->model(Fire::class)
-            ->wrapper([
+        CRUD::addColumn(['name' => 'fire_id',
+            'type' => 'select',
+            'entity' => 'fire',
+            'attribute' => 'id',
+            'model' => Fire::class,
+            'wrapper' => [
                 'href' => function ($crud, $column, $entry, $related_key) {
                     return backpack_url('fire/'.$related_key.'/show');
                 },
-            ]);
+            ],
+            'label' => "Fire ID"]);
+
+//
+//        CRUD::column('fire_id')
+//            ->lable("Fire ID")
+//            ->type('select')
+//            ->entity('fire')
+//            ->attribute('id')
+//            ->model(Fire::class)
+//            ->wrapper([
+//                'href' => function ($crud, $column, $entry, $related_key) {
+//                    return backpack_url('fire/'.$related_key.'/show');
+//                },
+//            ]);
 
 
         CRUD::addColumn([
