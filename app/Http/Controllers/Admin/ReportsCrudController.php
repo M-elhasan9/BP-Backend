@@ -80,7 +80,7 @@ class ReportsCrudController extends CrudController
 
         CRUD::addColumn(['name' => 'fire_id',
             'type' => 'select',
-            'entity' => 'fire',
+            'entity' => 'fires',
             'attribute' => 'id',
             'model' => Fire::class,
             'wrapper' => [

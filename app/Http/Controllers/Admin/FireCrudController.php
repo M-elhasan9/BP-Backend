@@ -58,7 +58,7 @@ class FireCrudController extends CrudController
 
         CRUD::addColumn(['name' => 'id', 'type' => 'text', 'label' => "Fire ID"]);
 
-        CRUD::addColumn(['name' => 'status',
+        CRUD::addColumn(['name' => 'fire_status',
             'label' => "Status", 'type' => 'closure', 'function' =>
                 function ($entry) {
                     switch ($entry->status) {
@@ -74,24 +74,7 @@ class FireCrudController extends CrudController
                 },]);
 
 
-        CRUD::addColumn(['name' => 'den_degree',
-            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
-                function ($entry) {
-                    switch ($entry->den_degree) {
-                        case 1:
-                            return "Fake";
-                        case 2:
-                            return "Low";
-                        case 3:
-                            return "Normal";
-                        case 4:
-                            return "High";
-                        case 5:
-                            return "dangerous";
-                        default:
-                            return "No Degree";
-                    }
-                },]);
+        CRUD::addColumn(['name' => 'fire_degree', 'label' => "Degree of Danger", 'type' => 'text']);
 
 
         CRUD::addColumn(['name' => 'count',
@@ -220,24 +203,7 @@ class FireCrudController extends CrudController
             'tab' => "tab"]);
 
 
-        CRUD::addColumn(['name' => 'den_degree',
-            'label' => "Degree of Danger", 'type' => 'closure', 'function' =>
-                function ($entry) {
-                    switch ($entry->den_degree) {
-                        case 1:
-                            return "Fake";
-                        case 2:
-                            return "Low";
-                        case 3:
-                            return "Normal";
-                        case 4:
-                            return "High";
-                        case 5:
-                            return "dangerous";
-                        default:
-                            return "No Degree";
-                    }
-                },]);
+        CRUD::addColumn(['name' => 'fire_degree', 'label' => "Degree of Danger", 'type' => 'text']);
 
     }
 

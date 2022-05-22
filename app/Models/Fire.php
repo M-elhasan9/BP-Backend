@@ -45,6 +45,24 @@ class Fire extends Model
 
     }
 
+    public function getFiredegreeAttribute()
+    {
+        switch ($this->den_degree) {
+            case 1:
+                return "Fake";
+            case 2:
+                return "Low";
+            case 3:
+                return "Normal";
+            case 4:
+                return "High";
+            case 5:
+                return "dangerous";
+            default:
+                return "No Degree";
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

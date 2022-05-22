@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Fire;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,6 +21,7 @@ class ReportFactory extends Factory
             'description' => $this->faker->text(20),
             'den_degree' => $this->faker->randomElement(['High', 'Normal', 'Low']),
             'lat_lang' => json_decode(  '{"lat": "36.236304", "lng": "37.115055"}') ,
+            'fire_id' =>  $this->faker->numberBetween(1, 3),
             'created_at' => $this->faker->dateTime,
         ];
     }
