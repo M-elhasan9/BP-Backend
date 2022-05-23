@@ -3,7 +3,7 @@
 namespace App\Ntfs;
 
 
-use Illuminate\Bus\Queueable;
+
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
@@ -18,7 +18,7 @@ class FireNearUser extends Notification
 
     var $type;
     var $fire_id ;
-    use Queueable;
+
 
     public function __construct($type ,$fire_id )
     {

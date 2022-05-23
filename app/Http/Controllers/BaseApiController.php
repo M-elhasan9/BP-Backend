@@ -27,7 +27,7 @@ abstract class BaseApiController extends Controller
            // $fire->den_degree = $report->den_degree;
             $fire->save();
             $report->fire_id = $fire->id;
-           // (new Admin\FireCrudController)->alert();
+
         } else {
             $report->fire_id = $query->id;
         }
