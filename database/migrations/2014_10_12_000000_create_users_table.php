@@ -22,6 +22,10 @@ class CreateUsersTable extends Migration
             $table->text("fcm_token")->nullable(true);
             $table->timestamps();
         });
+        Schema::table('users', function (Blueprint $table) {
+            $table->rememberToken();
+        });
+
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('email')->nullable(false)->unique();
