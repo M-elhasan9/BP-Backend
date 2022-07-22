@@ -13,7 +13,7 @@ class CreateTokensTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('admins', function (Blueprint $table) {
             $table->rememberToken();
         });
     }
