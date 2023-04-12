@@ -39,7 +39,7 @@ class ReportsCrudController extends CrudController
         $this->crud->enableExportButtons();
         $this->crud->set('show.setFromDb',false);
         $this->crud->denyAccess('create');
-        $this->crud->denyAccess('delete');
+        //$this->crud->denyAccess('delete');
         $this->crud->denyAccess('update');
 
 
