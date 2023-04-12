@@ -63,8 +63,8 @@ class UserApiController extends BaseApiController
         }
         $user->code ="123456";// (string)rand(100000, 999999);
         $user->save();
+        return $this->sendJsonResponse();
         if ($this->sendMassage($phone, $user->code)) {
-            return $this->sendJsonResponse();
         } else {
             return $this->sendError("Bir hata oluştu,Lütfen tekrar deneyiniz", 411);
         }
